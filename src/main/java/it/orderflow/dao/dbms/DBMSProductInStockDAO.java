@@ -21,7 +21,7 @@ import java.util.UUID;
 public class DBMSProductInStockDAO extends DBMSGeneralDAO<ProductInStock> implements ProductInStockDAO {
 
     private final Gson gson = new Gson();
-    private final String TABLE_NAME = "productInStock";
+    private final String tableName = "productInStock";
 
     private final DBMSClientArticleDAO clientArticleDAO;
 
@@ -59,17 +59,17 @@ public class DBMSProductInStockDAO extends DBMSGeneralDAO<ProductInStock> implem
     }
 
     private ProductInStock findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence(this.TABLE_NAME, "id", id,
+        return this.findFromPersistence(this.tableName, "id", id,
                 this::getProductInStock, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
     private ProductInStock findByCodeFromPersistence(String code) throws DatabaseException {
-        return this.findFromPersistence(this.TABLE_NAME, "code", code,
+        return this.findFromPersistence(this.tableName, "code", code,
                 this::getProductInStock, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
     private List<ProductInStock> findByArticleIdFromPersistence(UUID articleId) throws DatabaseException {
-        return this.findMatchesFromPersistence(this.TABLE_NAME, "articleId",
+        return this.findMatchesFromPersistence(this.tableName, "articleId",
                 articleId, this::getProductInStockList, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
@@ -140,21 +140,21 @@ public class DBMSProductInStockDAO extends DBMSGeneralDAO<ProductInStock> implem
 
     private void saveNewProductInStock(ProductInStock product) throws DatabaseException {
         this.saveNewEntity(product, this::loadProductInStock, this::getProductInStockCode, this::copy,
-                "INSERT INTO " + this.TABLE_NAME + " (id, code, articleId, productAttributes, price, quantity, " +
+                "INSERT INTO " + this.tableName + " (id, code, articleId, productAttributes, price, quantity, " +
                         "minimumStock, maximumStock, orderedProductsQuantity) VALUES (?,?,?,?,?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
     private void updateProductInStock(ProductInStock product) throws DatabaseException {
         this.updateEntity(product, this::findProductInStock, this::getProductInStockId,
-                "UPDATE " + this.TABLE_NAME + " SET code = ?, articleId = ?, productAttributes = ?, price = ?, " +
+                "UPDATE " + this.tableName + " SET code = ?, articleId = ?, productAttributes = ?, price = ?, " +
                         "quantity = ?, minimumStock = ?, maximumStock = ?, orderedProductsQuantity = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
     private void deleteProductInStock(ProductInStock product) throws DatabaseException {
         this.deleteEntity(product, this::findProductInStock, this::getProductInStockId,
-                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
+                "DELETE FROM " + this.tableName + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
@@ -171,7 +171,7 @@ public class DBMSProductInStockDAO extends DBMSGeneralDAO<ProductInStock> implem
 
     @Override
     public List<ProductInStock> loadAll() throws DatabaseException {
-        return this.loadAll(this.TABLE_NAME, this::getProductInStock, EntityException.Entity.PRODUCT_IN_STOCK);
+        return this.loadAll(this.tableName, this::getProductInStock, EntityException.Entity.PRODUCT_IN_STOCK);
     }
 
     @Override

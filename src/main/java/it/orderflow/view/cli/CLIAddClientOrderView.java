@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CLIAddClientOrderView extends CLIRootView implements AddClientOrderView {
 
-    private final String TITLE = "Add client order";
+    private final String title = "Add client order";
 
     private String number;
     private List<ProductBean> productsList;
@@ -38,7 +38,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     public void displayInsertionOptions() {
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
-            this.printTitle(this.TITLE);
+            this.printTitle(this.title);
             System.out.println("How do you want to select the products to order?");
             System.out.println("1) From this client past orders");
             System.out.println("2) From the articles list");
@@ -68,7 +68,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
         this.number = null;
         this.productsList = products;
         this.quantitiesProductsList = new ArrayList<>();
-        this.printTitle(this.TITLE);
+        this.printTitle(this.title);
         System.out.println("Inserts the quantity to order next to every product selected");
         for (ProductBean pb : products) {
             this.quantitiesProductsList.add(this.insertQuantity(pb.getArticleName() + " " + pb.getCode() + " : "));
@@ -80,7 +80,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     public void displayUnavailableProducts(List<ProductWithQuantityBean> products) {
         this.quantitiesProductsList = null;
         this.unavailableProductsList = products;
-        this.printTitle(this.TITLE);
+        this.printTitle(this.title);
         System.out.println("These are the unavailable products");
         System.out.printf("%-2s) | %-25s | %-100s | %-12s |%n",
                 "N°", "Article Name", "Code", "Quantity");
@@ -105,7 +105,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     @Override
     public void displayClientOrderDetails(ClientOrderBean clientOrder) {
         this.quantitiesUnavailableProductsList = null;
-        this.printTitle(this.TITLE);
+        this.printTitle(this.title);
 
         ClientBean cb = clientOrder.getClientBean();
         System.out.println("These are the client info");
@@ -164,11 +164,11 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
             ProductWithQuantityBean pwqb = new ProductWithQuantityBean();
             pwqb.setProductBean(this.productsList.get(i));
 
-            int number = Integer.parseInt(this.quantitiesProductsList.get(i));
+            int tempNumber = Integer.parseInt(this.quantitiesProductsList.get(i));
 
-            if (number >= 1) {
+            if (tempNumber >= 1) {
 
-                pwqb.setQuantity(number);
+                pwqb.setQuantity(tempNumber);
                 pwqbList.add(pwqb);
 
             } else throw new InvalidInputException(InvalidInputException.InputType.QUANTITY_1_OR_HIGHER);
@@ -184,11 +184,11 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
         for (int i = 0; i < this.unavailableProductsList.size(); i++) {
             ProductWithQuantityBean pwqb = this.unavailableProductsList.get(i);
 
-            int number = Integer.parseInt(this.quantitiesUnavailableProductsList.get(i));
+            int tempNumber = Integer.parseInt(this.quantitiesUnavailableProductsList.get(i));
 
-            if (number >= 0) {
+            if (tempNumber >= 0) {
 
-                pwqb.setQuantity(number);
+                pwqb.setQuantity(tempNumber);
                 pwqbList.add(pwqb);
 
             } else throw new InvalidInputException(InvalidInputException.InputType.QUANTITY_0_OR_HIGHER);

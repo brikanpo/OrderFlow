@@ -23,7 +23,7 @@ import java.util.UUID;
 public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implements SupplierOrderDAO {
 
     private final Gson gson = new Gson();
-    private final String TABLE_NAME = "supplierOrder";
+    private final String tableName = "supplierOrder";
 
     private final DBMSSupplierDAO supplierDAO;
     private final DBMSProductDAO productDAO;
@@ -55,12 +55,12 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
     }
 
     private SupplierOrder findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence(this.TABLE_NAME, "id", id,
+        return this.findFromPersistence(this.tableName, "id", id,
                 this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private List<SupplierOrder> findByStateFromPersistence(OrderState state) throws DatabaseException {
-        return this.findMatchesFromPersistence(this.TABLE_NAME, "orderState", state.toString(),
+        return this.findMatchesFromPersistence(this.tableName, "orderState", state.toString(),
                 this::getSupplierOrderList, EntityException.Entity.SUPPLIER_ORDER);
     }
 
@@ -134,19 +134,19 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
 
     private void saveNewSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.saveNewEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId, this::copy,
-                "INSERT INTO " + this.TABLE_NAME + " (id, registrationDate, productsOrdered, orderState, supplierId) VALUES (?,?,?,?,?);",
+                "INSERT INTO " + this.tableName + " (id, registrationDate, productsOrdered, orderState, supplierId) VALUES (?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private void updateSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.updateEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId,
-                "UPDATE " + this.TABLE_NAME + " SET registrationDate = ?, productsOrdered = ?, orderState = ?, supplierId = ?, deliveryDate = ?, warehouseWorkerId = ? WHERE id = ?;",
+                "UPDATE " + this.tableName + " SET registrationDate = ?, productsOrdered = ?, orderState = ?, supplierId = ?, deliveryDate = ?, warehouseWorkerId = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private void deleteSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.deleteEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId,
-                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
+                "DELETE FROM " + this.tableName + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
@@ -162,7 +162,7 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
 
     @Override
     public List<SupplierOrder> loadAll() throws DatabaseException {
-        return this.loadAll(this.TABLE_NAME, this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
+        return this.loadAll(this.tableName, this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     @Override

@@ -5,21 +5,21 @@ import it.orderflow.view.ViewEvent;
 
 public class CLIManageOrdersView extends CLIRootView implements ManageOrdersView {
 
-    private final String INFO_MESSAGE = "What do you want to do?";
-    private final String SELECTION_MESSAGE = "Type the number of the option chosen: ";
+    private final String infoMessage = "What do you want to do?";
+    private final String selectionMessage = "Type the number of the option chosen: ";
 
     @Override
     public void displayManageOrders() {
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
             this.printTitle("Manage orders");
-            System.out.println(this.INFO_MESSAGE);
+            System.out.println(this.infoMessage);
             System.out.println("1) Manage suppliers orders");
             System.out.println("2) Manage clients orders");
             System.out.println("3) Home");
             System.out.println("4) Logout");
             System.out.println("5) Exit");
-            System.out.print(this.SELECTION_MESSAGE);
+            System.out.print(this.selectionMessage);
             switch (scanner.nextLine()) {
                 case "1" -> this.notifyObservers(ViewEvent.MANAGE_SUPPLIERS_ORDERS);
                 case "2" -> this.notifyObservers(ViewEvent.MANAGE_CLIENTS_ORDERS);
@@ -39,7 +39,7 @@ public class CLIManageOrdersView extends CLIRootView implements ManageOrdersView
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
             this.printTitle("Manage clients orders");
-            System.out.println(this.INFO_MESSAGE);
+            System.out.println(this.infoMessage);
             System.out.println("1) Add client order");
             System.out.println("2) Prepare client order (NOT IMPLEMENTED)");
             System.out.println("3) Close client order (NOT IMPLEMENTED)");
@@ -47,7 +47,7 @@ public class CLIManageOrdersView extends CLIRootView implements ManageOrdersView
             System.out.println("5) Home");
             System.out.println("6) Logout");
             System.out.println("7) Exit");
-            System.out.print(this.SELECTION_MESSAGE);
+            System.out.print(this.selectionMessage);
             switch (scanner.nextLine()) {
                 case "1" -> this.notifyObservers(ViewEvent.ADD_CLIENT_ORDER);
                 case "4" -> this.notifyObservers(ViewEvent.BACK);
@@ -67,14 +67,14 @@ public class CLIManageOrdersView extends CLIRootView implements ManageOrdersView
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
             this.printTitle("Manage suppliers orders");
-            System.out.println(this.INFO_MESSAGE);
+            System.out.println(this.infoMessage);
             System.out.println("1) Add supplier order (NOT IMPLEMENTED)");
             System.out.println("2) Close supplier order (NOT IMPLEMENTED)");
             System.out.println("3) Back");
             System.out.println("4) Home");
             System.out.println("5) Logout");
             System.out.println("6) Exit");
-            System.out.print(this.SELECTION_MESSAGE);
+            System.out.print(this.selectionMessage);
             switch (scanner.nextLine()) {
                 case "3" -> this.notifyObservers(ViewEvent.BACK);
                 case "4" -> this.notifyObservers(ViewEvent.HOME);

@@ -91,6 +91,7 @@ public class ProductInStock extends Product {
         this.remove(quantity);
     }
 
+    @Override
     public ProductInStock copy() {
         return new ProductInStock(super.copy(), this.getQuantity(), this.getMinimumStock(), this.getMaximumStock(),
                 this.getOrderedProductsQuantity());
