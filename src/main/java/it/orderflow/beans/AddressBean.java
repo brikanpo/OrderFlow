@@ -12,11 +12,11 @@ public class AddressBean {
     public AddressBean() {
     }
 
-    public AddressBean(Address streetAddress) {
-        this.streetAddress = streetAddress.getStreetAddress();
-        this.cap = streetAddress.getCap();
-        this.city = streetAddress.getCity();
-        this.province = streetAddress.getProvince();
+    public AddressBean(Address address) {
+        this.streetAddress = address.getStreetAddress();
+        this.cap = address.getCap();
+        this.city = address.getCity();
+        this.province = address.getProvince();
     }
 
     public String getStreetAddress() {

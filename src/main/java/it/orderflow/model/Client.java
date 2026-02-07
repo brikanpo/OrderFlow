@@ -29,6 +29,10 @@ public class Client extends Contact {
     }
 
     public Client copy() {
-        return new Client(this.getId(), this.getName(), this.getEmail(), this.getPhone(), this.getAddress().copy());
+        if (this.getAddress() == null) {
+            return new Client(this.getId(), this.getName(), this.getEmail(), this.getPhone(), null);
+        } else {
+            return new Client(this.getId(), this.getName(), this.getEmail(), this.getPhone(), this.getAddress().copy());
+        }
     }
 }

@@ -80,9 +80,10 @@ public class DBMSGeneralDAO<T> {
         if (tableNameAndAttributeNames.size() == 1) {
             return result + ";";
         } else if (tableNameAndAttributeNames.size() == 2) {
-            return result + " WHERE " + tableNameAndAttributeNames.get(1) + " = ?" + ";";
+            return result + " WHERE " + tableNameAndAttributeNames.get(1) + " = ?;";
         } else if (tableNameAndAttributeNames.size() == 3) {
-            return result + " AND " + tableNameAndAttributeNames.get(2) + " = ?;";
+            return result + " WHERE " + tableNameAndAttributeNames.get(1) + " = ?"
+                    + " AND " + tableNameAndAttributeNames.get(2) + " = ?;";
         } else throw new UnsupportedOperationException();
     }
 
@@ -195,6 +196,7 @@ public class DBMSGeneralDAO<T> {
 
             return result;
         } catch (SQLException e) {
+            System.out.println(e.getErrorCode() + " : " + e.getMessage());
             throw new DatabaseException(DatabaseException.ErrorType.SELECT, entityType, e);
         } finally {
             try {

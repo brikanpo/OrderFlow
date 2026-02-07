@@ -150,7 +150,7 @@ public class JavaFXManageClientsView extends JavaFXRootView implements ManageCli
             addressBean.setCity(this.cityField.getText());
             addressBean.setProvince(this.provinceField.getText());
             clientBean.setAddressBean(addressBean);
-        }
+        } else throw new InvalidInputException(InvalidInputException.InputType.ADDRESS);
 
         return clientBean;
     }

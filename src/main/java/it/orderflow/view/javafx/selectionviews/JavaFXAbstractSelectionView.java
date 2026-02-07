@@ -40,6 +40,7 @@ public abstract class JavaFXAbstractSelectionView<T, V extends TableView<T>> ext
 
             MyButton backButton = new MyButton("Back");
 
+            confirmButton.disableProperty().bind(this.table.getSelectionModel().selectedItemProperty().isNull());
             confirmButton.setOnAction(e -> onConfirmPressed(singleSelection));
             backButton.setOnAction(e -> this.notifyObservers(onBack));
 

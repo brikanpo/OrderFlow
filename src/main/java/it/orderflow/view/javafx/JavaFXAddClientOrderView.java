@@ -159,8 +159,16 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
     }
 
     @Override
-    public List<ProductWithQuantityBean> selectedProductsQuantity() {
-        return this.pwqbList;
+    public List<ProductWithQuantityBean> selectedProductsQuantity() throws InvalidInputException {
+        List<ProductWithQuantityBean> productsOrdered = new ArrayList<>();
+
+        for (ProductWithQuantityBean pwqb : this.pwqbList) {
+            if (pwqb.getQuantity() != 0) {
+                productsOrdered.add(pwqb);
+            } else throw new InvalidInputException(InvalidInputException.InputType.QUANTITY_1_OR_HIGHER);
+        }
+
+        return productsOrdered;
     }
 
     @Override

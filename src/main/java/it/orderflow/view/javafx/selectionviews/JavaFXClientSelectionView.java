@@ -36,6 +36,7 @@ public class JavaFXClientSelectionView extends JavaFXAbstractSelectionView<Clien
 
             MyNavigationBar myNavigationBar = new MyNavigationBar();
 
+            confirmButton.disableProperty().bind(this.table.getSelectionModel().selectedItemProperty().isNull());
             confirmButton.setOnAction(e -> this.onConfirmPressed(true));
             backButton.setOnAction(e -> this.notifyObservers(onBack));
 

@@ -11,6 +11,7 @@ public class InvalidInputException extends Exception {
     }
 
     public enum InputType {
+        ADDRESS("If you want to add an address fill all the related fields"),
         BLANK("Fill all the non optional fields"),
         CONFIG_DEFAULT("The default options for graphics or persistence are invalid"),
         DEFAULT_PASSWORD("Enter a new password different from the default password"),

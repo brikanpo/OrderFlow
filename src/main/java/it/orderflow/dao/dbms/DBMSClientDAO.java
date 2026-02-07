@@ -57,9 +57,13 @@ public class DBMSClientDAO extends DBMSGeneralDAO<Client> implements ClientDAO {
             String phone = rs.getString("phone");
             String addressJSON = rs.getString("address");
 
-            Address address = gson.fromJson(addressJSON, Address.class);
+            if (addressJSON != null) {
+                Address address = gson.fromJson(addressJSON, Address.class);
 
-            return new Client(this.bytesToUUID(bytes), name, email, phone, address);
+                return new Client(this.bytesToUUID(bytes), name, email, phone, address);
+            } else {
+                return new Client(this.bytesToUUID(bytes), name, email, phone, null);
+            }
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.TRANSLATE_FROM, EntityException.Entity.CLIENT, e);
         }

@@ -116,7 +116,7 @@ public class CLIManageClientsView extends CLIRootView implements ManageClientsVi
             addressBean.setCity(this.city);
             addressBean.setProvince(this.province);
             this.client.setAddressBean(addressBean);
-        }
+        } else throw new InvalidInputException(InvalidInputException.InputType.ADDRESS);
 
         return this.client;
     }

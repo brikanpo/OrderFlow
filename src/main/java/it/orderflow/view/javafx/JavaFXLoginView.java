@@ -39,8 +39,7 @@ public class JavaFXLoginView extends JavaFXRootView implements LoginView {
 
         layout.getChildren().addAll(title, infoLabel, emailField, passwordField, loginButton, exitButton);
 
-        MyScene scene = new MyScene(layout, null);
-        stage.setScene(scene);
+        stage.getScene().setRoot(MyContainer.getContainer(layout, null));
     }
 
     @Override
