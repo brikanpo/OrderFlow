@@ -22,9 +22,6 @@ public class Main {
                 throw new InvalidInputException(InvalidInputException.InputType.CONFIG_DEFAULT);
             }
         } catch (InvalidInputException e) {
-            System.out.println(e.getMessage());
-
-            System.out.println("Starting OrderFlow in demo version with CLI graphics");
 
             AppController appController = new AppController(ViewType.CLI, DAOType.CACHE);
             appController.start();
