@@ -5,6 +5,7 @@ import it.orderflow.control.Statement;
 import it.orderflow.dao.ClientArticleDAO;
 import it.orderflow.exceptions.DatabaseException;
 import it.orderflow.exceptions.EntityException;
+import it.orderflow.model.ArticleData;
 import it.orderflow.model.Attributes;
 import it.orderflow.model.ClientArticle;
 
@@ -64,8 +65,8 @@ public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implemen
             Attributes articleAttributes = gson.fromJson(articleAttributesJson, Attributes.class);
             Attributes possibleAttributes = gson.fromJson(possibleAttributesJson, Attributes.class);
 
-            return new ClientArticle(this.bytesToUUID(bytesId), name, category, description,
-                    articleAttributes, possibleAttributes, iva, this.bytesToUUID(bytesSupplierArticleId));
+            return new ClientArticle(this.bytesToUUID(bytesId), new ArticleData(name, category, description,
+                    articleAttributes, possibleAttributes, iva), this.bytesToUUID(bytesSupplierArticleId));
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.TRANSLATE_FROM, EntityException.Entity.CLIENT_ARTICLE, e);
         }

@@ -1,6 +1,5 @@
 package it.orderflow.model;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class SupplierArticle extends Article {
@@ -12,9 +11,8 @@ public class SupplierArticle extends Article {
         this.setSupplierId(supplierId);
     }
 
-    public SupplierArticle(UUID id, String name, String category, String description, Attributes articleAttributes,
-                           Attributes possibleAttributes, BigDecimal iva, UUID supplierId) {
-        super(id, name, category, description, articleAttributes, possibleAttributes, iva);
+    public SupplierArticle(UUID id, ArticleData articleData, UUID supplierId) {
+        super(id, articleData);
         this.setSupplierId(supplierId);
     }
 
@@ -28,8 +26,6 @@ public class SupplierArticle extends Article {
 
     @Override
     public SupplierArticle copy() {
-        return new SupplierArticle(this.getId(), this.getName(), this.getCategory(), this.getDescription(),
-                this.getArticleAttributes().copy(), this.getPossibleAttributes().copy(), this.getIva(),
-                this.getSupplierId());
+        return new SupplierArticle(this.getId(), this.getArticleData().copy(), this.getSupplierId());
     }
 }

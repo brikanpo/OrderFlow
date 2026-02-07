@@ -8,45 +8,49 @@ import java.util.UUID;
 
 public class SupplierOrder extends Order {
 
-    private Supplier supplier;
-    private LocalDateTime deliveryDate;
-    private UUID warehouseWorkerId;
+    private SupplierOrderData supplierOrderData;
 
     public SupplierOrder(ProductsWithQuantity productsOrdered, Supplier supplier) {
         super(productsOrdered);
-        this.setSupplier(supplier);
+        this.setSupplierOrderData(new SupplierOrderData(supplier));
     }
 
     public SupplierOrder(UUID id, LocalDateTime registrationDate, ProductsWithQuantity productsOrdered, OrderState state,
-                         Supplier supplier, LocalDateTime deliveryDate, UUID warehouseWorkerId) {
+                         SupplierOrderData supplierOrderData) {
         super(id, registrationDate, productsOrdered, state);
-        this.setSupplier(supplier);
-        this.setDeliveryDate(deliveryDate);
-        this.setWarehouseWorkerId(warehouseWorkerId);
+        this.setSupplierOrderData(supplierOrderData);
+    }
+
+    public SupplierOrderData getSupplierOrderData() {
+        return this.supplierOrderData;
+    }
+
+    public void setSupplierOrderData(SupplierOrderData supplierOrderData) {
+        this.supplierOrderData = supplierOrderData;
     }
 
     public Supplier getSupplier() {
-        return this.supplier;
+        return this.getSupplierOrderData().getSupplier();
     }
 
     public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+        this.getSupplierOrderData().setSupplier(supplier);
     }
 
     public LocalDateTime getDeliveryDate() {
-        return this.deliveryDate;
+        return this.getSupplierOrderData().getDeliveryDate();
     }
 
     public void setDeliveryDate(LocalDateTime deliveryDate) {
-        this.deliveryDate = deliveryDate;
+        this.getSupplierOrderData().setDeliveryDate(deliveryDate);
     }
 
     public UUID getWarehouseWorkerId() {
-        return this.warehouseWorkerId;
+        return this.getSupplierOrderData().getWarehouseWorkerId();
     }
 
     public void setWarehouseWorkerId(UUID warehouseWorkerId) {
-        this.warehouseWorkerId = warehouseWorkerId;
+        this.getSupplierOrderData().setWarehouseWorkerId(warehouseWorkerId);
     }
 
     public void closeSupplierOrder(UUID warehouseWorkerId) {
@@ -81,6 +85,6 @@ public class SupplierOrder extends Order {
     @Override
     public SupplierOrder copy() {
         return new SupplierOrder(this.getId(), this.getRegistrationDate(), this.getProductsOrdered().copy(),
-                this.getState(), this.getSupplier().copy(), this.getDeliveryDate(), this.getWarehouseWorkerId());
+                this.getState(), this.getSupplierOrderData().copy());
     }
 }

@@ -102,9 +102,9 @@ public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements C
             Client client = this.clientDAO.findClient(this.bytesToUUID(bytesClientId));
 
             return new ClientOrder(this.bytesToUUID(bytesId), registrationDate, productsOrdered,
-                    OrderState.getState(orderStateString), this.bytesToUUID(bytesRepresentativeId),
+                    OrderState.getState(orderStateString), new ClientOrderData(this.bytesToUUID(bytesRepresentativeId),
                     client, this.bytesToUUID(bytesWarehouseWorkerId), deliveryDate,
-                    this.bytesToUUID(bytesDeliveryWorkerId));
+                    this.bytesToUUID(bytesDeliveryWorkerId)));
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.TRANSLATE_FROM, EntityException.Entity.CLIENT_ORDER, e);
         }

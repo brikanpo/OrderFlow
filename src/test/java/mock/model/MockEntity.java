@@ -32,18 +32,19 @@ public class MockEntity {
     }
 
     public ClientArticle getMockClientArticle() {
-        return new ClientArticle(UUID.randomUUID(), "clientArticle1", "category",
+        return new ClientArticle(UUID.randomUUID(), new ArticleData("clientArticle1", "category",
                 "description", this.getMockAttributes(), this.getMockPossibleAttributes(),
-                new BigDecimal("0.22"), this.getMockSupplierArticle().getId());
+                new BigDecimal("0.22")), this.getMockSupplierArticle().getId());
     }
 
     public ClientOrder getMockClosedClientOrder() {
         return new ClientOrder(UUID.randomUUID(),
                 LocalDateTime.of(2026, 1, 10, 9, 0),
-                this.getMockClientProductsWithQuantity(), OrderState.CLOSED, this.getMockRepresentative().getId(),
-                this.getMockClient(), this.getMockWarehouseWorker().getId(),
-                LocalDateTime.of(2026, 1, 15, 9, 0),
-                this.getMockDeliveryWorker().getId());
+                this.getMockClientProductsWithQuantity(), OrderState.CLOSED,
+                new ClientOrderData(this.getMockRepresentative().getId(), this.getMockClient(),
+                        this.getMockWarehouseWorker().getId(),
+                        LocalDateTime.of(2026, 1, 15, 9, 0),
+                        this.getMockDeliveryWorker().getId()));
     }
 
     public Employee getMockManager() {
@@ -96,8 +97,8 @@ public class MockEntity {
     }
 
     public SupplierArticle getMockSupplierArticle() {
-        return new SupplierArticle(UUID.randomUUID(), "supplierArticle1", "category",
+        return new SupplierArticle(UUID.randomUUID(), new ArticleData("supplierArticle1", "category",
                 "description", this.getMockAttributes(), this.getMockPossibleAttributes(),
-                new BigDecimal("0.22"), this.getMockSupplier().getId());
+                new BigDecimal("0.22")), this.getMockSupplier().getId());
     }
 }

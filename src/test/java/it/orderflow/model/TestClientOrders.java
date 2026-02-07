@@ -25,21 +25,19 @@ class TestClientOrders {
                 LocalDateTime.of(2026, 1, 10, 12, 0),
                 me.getMockClientProductsWithQuantity(),
                 OrderState.CLOSED,
-                me.getMockRepresentative().getId(),
-                me.getMockClient(),
-                me.getMockWarehouseWorker().getId(),
-                LocalDateTime.of(2026, 1, 12, 12, 0),
-                me.getMockDeliveryWorker().getId());
+                new ClientOrderData(me.getMockRepresentative().getId(), me.getMockClient(),
+                        me.getMockWarehouseWorker().getId(),
+                        LocalDateTime.of(2026, 1, 12, 12, 0),
+                        me.getMockDeliveryWorker().getId()));
 
         order2 = new ClientOrder(UUID.randomUUID(),
                 LocalDateTime.of(2026, 1, 13, 12, 0),
                 me.getMockClientProductsWithQuantity(),
                 OrderState.CLOSED,
-                me.getMockRepresentative().getId(),
-                me.getMockClient(),
-                me.getMockWarehouseWorker().getId(),
-                LocalDateTime.of(2026, 1, 14, 12, 0),
-                me.getMockDeliveryWorker().getId());
+                new ClientOrderData(me.getMockRepresentative().getId(), me.getMockClient(),
+                        me.getMockWarehouseWorker().getId(),
+                        LocalDateTime.of(2026, 1, 14, 12, 0),
+                        me.getMockDeliveryWorker().getId()));
 
         clientOrders = new ClientOrders(new ArrayList<>(List.of(order1, order2)));
     }

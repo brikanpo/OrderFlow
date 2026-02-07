@@ -1,8 +1,8 @@
 package it.orderflow.control;
 
 import it.orderflow.dao.TransactionControl;
-import it.orderflow.exceptions.CacheIntegrityException;
 import it.orderflow.exceptions.DatabaseException;
+import it.orderflow.exceptions.PersistenceException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +24,7 @@ public class TransactionSafeController extends RootController {
         this.transaction.get(dao).add(statement);
     }
 
-    public void endOperation() throws CacheIntegrityException, DatabaseException {
+    public void endOperation() throws PersistenceException {
         try {
             for (Map.Entry<TransactionControl<?>, List<Statement<?>>> entry : this.transaction.entrySet()) {
                 executeHelper(entry.getKey(), entry.getValue());
@@ -37,12 +37,12 @@ public class TransactionSafeController extends RootController {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void executeHelper(TransactionControl<T> dao, List<Statement<?>> statements) throws DatabaseException {
+    private <T> void executeHelper(TransactionControl<T> dao, List<Statement<?>> statements) throws PersistenceException {
         dao.executeTransaction((List<Statement<T>>) (List<?>) statements);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> void rollbackHelper(TransactionControl<T> dao, List<Statement<?>> statements) throws CacheIntegrityException, DatabaseException {
+    private <T> void rollbackHelper(TransactionControl<T> dao, List<Statement<?>> statements) throws PersistenceException {
         dao.keepIntegrity((List<Statement<T>>) (List<?>) statements);
     }
 }

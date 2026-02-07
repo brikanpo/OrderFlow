@@ -1,5 +1,6 @@
 package it.orderflow.model;
 
+import mock.model.MockEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +17,14 @@ class TestInventory {
     private ProductInStock p1;
     private ProductInStock p2;
 
+    private final MockEntity me = new MockEntity();
+    private final ClientArticle clientArticle = me.getMockClientArticle();
+
     @BeforeEach
     void setUp() {
-        p1 = new ProductInStock(new Product(UUID.randomUUID(), "code1", null, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("25.00")),
+        p1 = new ProductInStock(new Product(UUID.randomUUID(), "code1", clientArticle, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("25.00")),
                 10, 5, 20, 0);
-        p2 = new ProductInStock(new Product(UUID.randomUUID(), "code2", null, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
+        p2 = new ProductInStock(new Product(UUID.randomUUID(), "code2", clientArticle, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
                 10, 5, 20, 6);
 
         inventory = new Inventory(new ArrayList<>(List.of(p1, p2)));
@@ -29,7 +33,7 @@ class TestInventory {
     @Test
     void testConstructorCheckCopy() {
         List<ProductInStock> list = new ArrayList<>();
-        ProductInStock p = new ProductInStock(new Product(UUID.randomUUID(), "code3", null, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
+        ProductInStock p = new ProductInStock(new Product(UUID.randomUUID(), "code3", clientArticle, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
                 10, 5, 20, 0);
         list.add(p);
         Inventory inv = new Inventory(list);

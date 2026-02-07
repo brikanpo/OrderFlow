@@ -8,67 +8,65 @@ import java.util.UUID;
 
 public class ClientOrder extends Order {
 
-    private UUID representativeId;
-    private Client client;
-    private UUID warehouseWorkerId;
-    private LocalDateTime deliveryDate;
-    private UUID deliveryWorkerId;
+    private ClientOrderData clientOrderData;
 
     public ClientOrder(ProductsWithQuantity productsOrdered, UUID representativeId, Client client) {
         super(productsOrdered);
-        this.setRepresentativeId(representativeId);
-        this.setClient(client);
+        this.setClientOrderData(new ClientOrderData(representativeId, client));
     }
 
     public ClientOrder(UUID id, LocalDateTime registrationDate, ProductsWithQuantity productsOrdered,
-                       OrderState state, UUID representativeId, Client client, UUID warehouseWorkerId,
-                       LocalDateTime deliveryDate, UUID deliveryWorkerId) {
+                       OrderState state, ClientOrderData clientOrderData) {
         super(id, registrationDate, productsOrdered, state);
-        this.setRepresentativeId(representativeId);
-        this.setClient(client);
-        this.setWarehouseWorkerId(warehouseWorkerId);
-        this.setDeliveryDate(deliveryDate);
-        this.setDeliveryWorkerId(deliveryWorkerId);
+        this.setClientOrderData(clientOrderData);
+    }
+
+    public ClientOrderData getClientOrderData() {
+        return this.clientOrderData;
+    }
+
+    public void setClientOrderData(ClientOrderData clientOrderData) {
+        this.clientOrderData = clientOrderData;
     }
 
     public Client getClient() {
-        return this.client;
+        return this.getClientOrderData().getClient();
     }
 
     public void setClient(Client client) {
-        this.client = client;
+        this.getClientOrderData().setClient(client);
     }
 
     public UUID getRepresentativeId() {
-        return this.representativeId;
+        return this.getClientOrderData().getRepresentativeId();
     }
 
     public void setRepresentativeId(UUID representativeId) {
-        this.representativeId = representativeId;
+        this.getClientOrderData().setRepresentativeId(representativeId);
     }
 
     public UUID getWarehouseWorkerId() {
-        return this.warehouseWorkerId;
+        return this.getClientOrderData().getWarehouseWorkerId();
     }
 
     public void setWarehouseWorkerId(UUID warehouseWorkerId) {
-        this.warehouseWorkerId = warehouseWorkerId;
+        this.getClientOrderData().setWarehouseWorkerId(warehouseWorkerId);
     }
 
     public LocalDateTime getDeliveryDate() {
-        return this.deliveryDate;
+        return this.getClientOrderData().getDeliveryDate();
     }
 
     public void setDeliveryDate(LocalDateTime deliveryDate) {
-        this.deliveryDate = deliveryDate;
+        this.getClientOrderData().setDeliveryDate(deliveryDate);
     }
 
     public UUID getDeliveryWorkerId() {
-        return this.deliveryWorkerId;
+        return this.getClientOrderData().getDeliveryWorkerId();
     }
 
     public void setDeliveryWorkerId(UUID deliveryWorkerId) {
-        this.deliveryWorkerId = deliveryWorkerId;
+        this.getClientOrderData().setDeliveryWorkerId(deliveryWorkerId);
     }
 
     public void prepareClientOrder(UUID warehouseWorkerId) {
@@ -113,7 +111,6 @@ public class ClientOrder extends Order {
     @Override
     public ClientOrder copy() {
         return new ClientOrder(this.getId(), this.getRegistrationDate(), this.getProductsOrdered().copy(),
-                this.getState(), this.getRepresentativeId(), this.getClient().copy(), this.getWarehouseWorkerId(),
-                this.getDeliveryDate(), this.getDeliveryWorkerId());
+                this.getState(), this.getClientOrderData().copy());
     }
 }

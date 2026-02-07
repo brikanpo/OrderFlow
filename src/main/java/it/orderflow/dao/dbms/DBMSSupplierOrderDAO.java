@@ -86,8 +86,8 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
             Supplier supplier = this.supplierDAO.findSupplier(this.bytesToUUID(bytesSupplierId));
 
             return new SupplierOrder(this.bytesToUUID(bytesId), registrationDate, productsOrdered,
-                    OrderState.getState(orderStateString), supplier, deliveryDate,
-                    this.bytesToUUID(bytesWarehouseWorkerId));
+                    OrderState.getState(orderStateString), new SupplierOrderData(supplier, deliveryDate,
+                    this.bytesToUUID(bytesWarehouseWorkerId)));
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.TRANSLATE_FROM, EntityException.Entity.SUPPLIER_ORDER, e);
         }

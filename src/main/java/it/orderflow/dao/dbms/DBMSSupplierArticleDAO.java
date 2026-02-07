@@ -5,6 +5,7 @@ import it.orderflow.control.Statement;
 import it.orderflow.dao.SupplierArticleDAO;
 import it.orderflow.exceptions.DatabaseException;
 import it.orderflow.exceptions.EntityException;
+import it.orderflow.model.ArticleData;
 import it.orderflow.model.Attributes;
 import it.orderflow.model.SupplierArticle;
 
@@ -64,8 +65,8 @@ public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> impl
             Attributes articleAttributes = gson.fromJson(articleAttributesJson, Attributes.class);
             Attributes possibleAttributes = gson.fromJson(possibleAttributesJson, Attributes.class);
 
-            return new SupplierArticle(this.bytesToUUID(bytesId), name, category, description,
-                    articleAttributes, possibleAttributes, iva, this.bytesToUUID(bytesSupplierArticleId));
+            return new SupplierArticle(this.bytesToUUID(bytesId), new ArticleData(name, category, description,
+                    articleAttributes, possibleAttributes, iva), this.bytesToUUID(bytesSupplierArticleId));
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.TRANSLATE_FROM, EntityException.Entity.SUPPLIER_ARTICLE, e);
         }
