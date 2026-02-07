@@ -1,0 +1,14 @@
+package it.orderflow.view;
+
+public enum ViewType {
+    CLI,
+    JAVAFX;
+
+    public static ViewType getViewType(String str) {
+        return switch (str) {
+            case "CLI" -> CLI;
+            case "JavaFX" -> JAVAFX;
+            default -> null;
+        };
+    }
+}
