@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>it.MyApp</groupId>
-    <artifactId>OrderFlow</artifactId>
+    <groupId>it.orderflow</groupId>
+    <artifactId>orderflow</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -24,6 +24,11 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-gmail</artifactId>
             <version>v1-rev20220404-2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.12.1</version>
         </dependency>
         <dependency>
             <groupId>com.google.oauth-client</groupId>
@@ -53,7 +58,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>RELEASE</version>
+            <version>5.11.4</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -73,7 +78,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>${javafx.maven.plugin.version}</version>
                 <configuration>
-                    <mainClass>it.OrderFlow.Main</mainClass>
+                    <mainClass>it.orderflow.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
