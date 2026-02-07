@@ -196,7 +196,6 @@ public class DBMSGeneralDAO<T> {
 
             return result;
         } catch (SQLException e) {
-            System.out.println(e.getErrorCode() + " : " + e.getMessage());
             throw new DatabaseException(DatabaseException.ErrorType.SELECT, entityType, e);
         } finally {
             try {
