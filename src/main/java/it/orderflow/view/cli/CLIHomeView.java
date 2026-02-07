@@ -5,8 +5,8 @@ import it.orderflow.view.ViewEvent;
 
 public class CLIHomeView extends CLIRootView implements HomeView {
 
-    private final String infoMessage = "What do you want to do?";
-    private final String selectionMessage = "Type the number of the option chosen: ";
+    private static final String INFO_MESSAGE = "What do you want to do?";
+    private static final String SELECTION_MESSAGE = "Type the number of the option chosen: ";
 
     public CLIHomeView() {
         super();
@@ -18,7 +18,7 @@ public class CLIHomeView extends CLIRootView implements HomeView {
         while (!chosenAnOption) {
             this.printTitle("Home");
             System.out.println("You are logged in as a Manager");
-            System.out.println(this.infoMessage);
+            System.out.println(INFO_MESSAGE);
             System.out.println("1) Manage employees");
             System.out.println("2) Manage suppliers");
             System.out.println("3) Manage clients");
@@ -28,7 +28,7 @@ public class CLIHomeView extends CLIRootView implements HomeView {
             System.out.println("7) Manage personal info");
             System.out.println("8) Logout");
             System.out.println("9) Exit");
-            System.out.print(this.selectionMessage);
+            System.out.print(SELECTION_MESSAGE);
             switch (scanner.nextLine()) {
                 case "1" -> this.notifyObservers(ViewEvent.MANAGE_EMPLOYEES);
                 case "2" -> this.notifyObservers(ViewEvent.MANAGE_SUPPLIERS);
@@ -53,13 +53,13 @@ public class CLIHomeView extends CLIRootView implements HomeView {
         while (!chosenAnOption) {
             this.printTitle("Home");
             System.out.println("You are logged in as a Representative");
-            System.out.println(this.infoMessage);
+            System.out.println(INFO_MESSAGE);
             System.out.println("1) Manage clients");
             System.out.println("2) Add client order");
             System.out.println("3) Manage personal info");
             System.out.println("4) Logout");
             System.out.println("5) Exit");
-            System.out.print(this.selectionMessage);
+            System.out.print(SELECTION_MESSAGE);
             switch (scanner.nextLine()) {
                 case "1" -> this.notifyObservers(ViewEvent.MANAGE_CLIENTS);
                 case "2" -> this.notifyObservers(ViewEvent.ADD_CLIENT_ORDER);
@@ -80,13 +80,13 @@ public class CLIHomeView extends CLIRootView implements HomeView {
         while (!chosenAnOption) {
             this.printTitle("Home");
             System.out.println("You are logged in as a Warehouse worker");
-            System.out.println(this.infoMessage);
+            System.out.println(INFO_MESSAGE);
             System.out.println("1) Prepare client order (NOT IMPLEMENTED)");
             System.out.println("2) Close supplier order (NOT IMPLEMENTED)");
             System.out.println("3) Manage personal info");
             System.out.println("4) Logout");
             System.out.println("5) Exit");
-            System.out.print(this.selectionMessage);
+            System.out.print(SELECTION_MESSAGE);
             switch (scanner.nextLine()) {
                 case "3" -> this.notifyObservers(ViewEvent.MANAGE_PERSONAL_INFO);
                 case "4" -> this.notifyObservers(ViewEvent.LOGOUT);
@@ -105,12 +105,12 @@ public class CLIHomeView extends CLIRootView implements HomeView {
         while (!chosenAnOption) {
             this.printTitle("Home");
             System.out.println("You are logged in as a Delivery worker");
-            System.out.println(this.infoMessage);
+            System.out.println(INFO_MESSAGE);
             System.out.println("1) Close client order (NOT IMPLEMENTED)");
             System.out.println("2) Manage personal info");
             System.out.println("3) Logout");
             System.out.println("4) Exit");
-            System.out.print(this.selectionMessage);
+            System.out.print(SELECTION_MESSAGE);
             switch (scanner.nextLine()) {
                 case "2" -> this.notifyObservers(ViewEvent.MANAGE_PERSONAL_INFO);
                 case "3" -> this.notifyObservers(ViewEvent.LOGOUT);

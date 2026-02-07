@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CLIAddClientOrderView extends CLIRootView implements AddClientOrderView {
 
-    private final String title = "Add client order";
+    private static final String TITLE = "Add client order";
 
     private String number;
     private List<ProductBean> productsList;
@@ -38,7 +38,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     public void displayInsertionOptions() {
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
-            this.printTitle(this.title);
+            this.printTitle(TITLE);
             System.out.println("How do you want to select the products to order?");
             System.out.println("1) From this client past orders");
             System.out.println("2) From the articles list");
@@ -68,7 +68,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
         this.number = null;
         this.productsList = products;
         this.quantitiesProductsList = new ArrayList<>();
-        this.printTitle(this.title);
+        this.printTitle(TITLE);
         System.out.println("Inserts the quantity to order next to every product selected");
         for (ProductBean pb : products) {
             this.quantitiesProductsList.add(this.insertQuantity(pb.getArticleName() + " " + pb.getCode() + " : "));
@@ -80,7 +80,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     public void displayUnavailableProducts(List<ProductWithQuantityBean> products) {
         this.quantitiesProductsList = null;
         this.unavailableProductsList = products;
-        this.printTitle(this.title);
+        this.printTitle(TITLE);
         System.out.println("These are the unavailable products");
         System.out.printf("%-2s) | %-25s | %-100s | %-12s |%n",
                 "N°", "Article Name", "Code", "Quantity");
@@ -105,7 +105,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     @Override
     public void displayClientOrderDetails(ClientOrderBean clientOrder) {
         this.quantitiesUnavailableProductsList = null;
-        this.printTitle(this.title);
+        this.printTitle(TITLE);
 
         ClientBean cb = clientOrder.getClientBean();
         System.out.println("These are the client info");
