@@ -26,7 +26,7 @@ public class ClientOrderBean {
         this.id = clientOrder.getId();
         this.registrationDate = clientOrder.getRegistrationDate();
         List<ProductWithQuantityBean> products = new ArrayList<>();
-        for (ProductWithQuantity product : clientOrder.getProductsOrdered().getProducts()) {
+        for (ProductWithQuantity product : clientOrder.getProductsOrdered().getProductWithQuantityList()) {
             products.add(new ProductWithQuantityBean(product));
         }
         this.productsOrdered = products;

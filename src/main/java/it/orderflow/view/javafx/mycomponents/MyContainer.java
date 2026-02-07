@@ -7,6 +7,10 @@ import javafx.scene.layout.StackPane;
 
 public class MyContainer {
 
+    private MyContainer() {
+        //This class should not be instantiated
+    }
+
     public static BorderPane getContainer(Node node, MyNavigationBar myNavigationBar) {
 
         StackPane stackPane = new StackPane(node);

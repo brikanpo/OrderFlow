@@ -17,7 +17,4 @@ public abstract class RootView implements BasicView {
     public void addObserver(ViewObserver observer) {
         this.observers.add(observer);
     }
-
-    @Override
-    public abstract void close();
 }

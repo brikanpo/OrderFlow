@@ -68,15 +68,15 @@ public class CLIManageSuppliersView extends CLIRootView implements ManageSupplie
         System.out.printf("%-25s | %-35s | %-10s | %-13s |%n",
                 "Name", "Email", "Phone", "Transport Fee");
 
-        String phone = supplier.getPhone();
-        if (phone == null) phone = "";
+        String tempPhone = supplier.getPhone();
+        if (tempPhone == null) tempPhone = "";
 
-        BigDecimal transportFee = supplier.getTransportFee();
+        BigDecimal tempTransportFee = supplier.getTransportFee();
         String transportFeeStr = "";
-        if (transportFee != null) transportFeeStr = NumberFormat.getCurrencyInstance().format(transportFee);
+        if (tempTransportFee != null) transportFeeStr = NumberFormat.getCurrencyInstance().format(tempTransportFee);
 
         System.out.printf("%-25s | %-35s | %-10s | %-12s |%n",
-                supplier.getName(), supplier.getEmail(), phone, transportFeeStr);
+                supplier.getName(), supplier.getEmail(), tempPhone, transportFeeStr);
 
         System.out.println("If you don't want to change something leave the field blank.");
         this.insertSupplierInfo();

@@ -3,25 +3,26 @@ package it.orderflow.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ProductsWithQuantity implements Cloneable {
+public class ProductsWithQuantity {
 
-    private List<ProductWithQuantity> products;
+    private List<ProductWithQuantity> productWithQuantityList;
 
     public ProductsWithQuantity() {
-        this.products = new ArrayList<>();
+        this.productWithQuantityList = new ArrayList<>();
     }
 
-    public List<ProductWithQuantity> getProducts() {
-        return this.products;
+    public List<ProductWithQuantity> getProductWithQuantityList() {
+        return this.productWithQuantityList;
     }
 
-    public void setProducts(List<ProductWithQuantity> products) {
-        this.products = products;
+    public void setProductWithQuantityList(List<ProductWithQuantity> productWithQuantityList) {
+        this.productWithQuantityList = productWithQuantityList;
     }
 
     public ProductWithQuantity get(String code) {
-        for (ProductWithQuantity product : this.getProducts()) {
+        for (ProductWithQuantity product : this.getProductWithQuantityList()) {
             if (product.getCode().equals(code)) {
                 return product;
             }
@@ -36,20 +37,20 @@ public class ProductsWithQuantity implements Cloneable {
             if (prod != null) {
                 prod.add(quantity);
             } else {
-                this.getProducts().add(product);
+                this.getProductWithQuantityList().add(product);
             }
         }
     }
 
     public void addProducts(ProductsWithQuantity products) {
-        for (ProductWithQuantity prod : products.getProducts()) {
+        for (ProductWithQuantity prod : products.getProductWithQuantityList()) {
             this.add(prod);
         }
     }
 
     public BigDecimal generateTotal() {
         BigDecimal result = new BigDecimal(0);
-        for (ProductWithQuantity prod : this.getProducts()) {
+        for (ProductWithQuantity prod : this.getProductWithQuantityList()) {
             result = result.add(prod.generateTotal());
         }
         return result;
@@ -60,25 +61,22 @@ public class ProductsWithQuantity implements Cloneable {
         if (prod != null) {
             prod.remove(product.getQuantity());
             if (prod.isEmpty()) {
-                this.getProducts().remove(prod);
+                this.getProductWithQuantityList().remove(prod);
             }
         }
     }
 
     public void removeProducts(ProductsWithQuantity products) {
-        for (ProductWithQuantity prod : products.getProducts()) {
+        for (ProductWithQuantity prod : products.getProductWithQuantityList()) {
             this.remove(prod);
         }
     }
 
-    @Override
-    public ProductsWithQuantity clone() {
-        try {
-            ProductsWithQuantity clone = (ProductsWithQuantity) super.clone();
-            clone.products = this.products.stream().map(ProductWithQuantity::clone).toList();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public ProductsWithQuantity copy() {
+        ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
+        productsWithQuantity.setProductWithQuantityList(this.getProductWithQuantityList().stream()
+                .map(ProductWithQuantity::copy)
+                .collect(Collectors.toCollection(ArrayList::new)));
+        return productsWithQuantity;
     }
 }

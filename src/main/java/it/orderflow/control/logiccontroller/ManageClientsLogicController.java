@@ -5,10 +5,7 @@ import it.orderflow.beans.ClientBean;
 import it.orderflow.control.Statement;
 import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.ClientDAO;
-import it.orderflow.exceptions.AlreadyInUseException;
-import it.orderflow.exceptions.EntityException;
-import it.orderflow.exceptions.EntityNotFoundException;
-import it.orderflow.exceptions.InvalidInputException;
+import it.orderflow.exceptions.*;
 import it.orderflow.model.Address;
 import it.orderflow.model.Client;
 
@@ -39,7 +36,7 @@ public class ManageClientsLogicController extends TransactionSafeController {
         this.tempClientBean = tempClientBean;
     }
 
-    public List<ClientBean> getClientsList() throws Exception {
+    public List<ClientBean> getClientsList() throws PersistenceException {
         List<Client> clients = this.getClientDAO().loadAll();
 
         return clients.stream()
@@ -51,7 +48,8 @@ public class ManageClientsLogicController extends TransactionSafeController {
         this.setTempClientBean(clientBean);
     }
 
-    public void saveNewClient(ClientBean clientBean) throws Exception {
+    public void saveNewClient(ClientBean clientBean)
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         Client targetClient = this.getClientDAO().loadClient(clientBean.getEmail());
         if (targetClient == null) {
 
@@ -67,7 +65,7 @@ public class ManageClientsLogicController extends TransactionSafeController {
 
             AddressBean addressBean = clientBean.getAddressBean();
             if (addressBean != null) {
-                Address address = new Address(addressBean.getAddress(), addressBean.getCap(), addressBean.getCity(),
+                Address address = new Address(addressBean.getStreetAddress(), addressBean.getCap(), addressBean.getCity(),
                         addressBean.getProvince());
                 tempClient.changeAddress(address);
             }
@@ -79,10 +77,11 @@ public class ManageClientsLogicController extends TransactionSafeController {
         } else throw new AlreadyInUseException(EntityException.Entity.CLIENT, AlreadyInUseException.Param.EMAIL);
     }
 
-    public void changeClientInfo(ClientBean clientBean) throws Exception {
+    public void changeClientInfo(ClientBean clientBean)
+            throws EntityNotFoundException, PersistenceException {
         Client oldClient = this.getClientDAO().loadClient(this.getTempClientBean().getEmail());
         if (oldClient != null) {
-            Client newClient = oldClient.clone();
+            Client newClient = oldClient.copy();
 
             String name = clientBean.getName();
             if (name != null) newClient.changeName(name);
@@ -95,7 +94,7 @@ public class ManageClientsLogicController extends TransactionSafeController {
 
             AddressBean addressBean = clientBean.getAddressBean();
             if (addressBean != null) {
-                Address address = new Address(addressBean.getAddress(), addressBean.getCap(), addressBean.getCity(),
+                Address address = new Address(addressBean.getStreetAddress(), addressBean.getCap(), addressBean.getCity(),
                         addressBean.getProvince());
                 newClient.changeAddress(address);
             }

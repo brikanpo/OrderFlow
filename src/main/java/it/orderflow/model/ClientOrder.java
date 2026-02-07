@@ -111,7 +111,9 @@ public class ClientOrder extends Order {
     }
 
     @Override
-    public ClientOrder clone() {
-        return (ClientOrder) super.clone();
+    public ClientOrder copy() {
+        return new ClientOrder(this.getId(), this.getRegistrationDate(), this.getProductsOrdered().copy(),
+                this.getState(), this.getRepresentativeId(), this.getClient().copy(), this.getWarehouseWorkerId(),
+                this.getDeliveryDate(), this.getDeliveryWorkerId());
     }
 }

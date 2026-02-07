@@ -19,7 +19,7 @@ public class CacheProductDAO extends CacheGeneralDAO<Product> implements Product
     }
 
     private Product copy(Product product) {
-        return product.clone();
+        return product.copy();
     }
 
     private Product findProduct(UUID id) {

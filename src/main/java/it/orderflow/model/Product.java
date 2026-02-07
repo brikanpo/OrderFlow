@@ -3,7 +3,7 @@ package it.orderflow.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class Product implements Cloneable {
+public class Product {
 
     private UUID id;
     private String code;
@@ -76,14 +76,8 @@ public class Product implements Cloneable {
         return this.getPrice().add(this.getPrice().multiply(this.getArticle().getIva()));
     }
 
-    @Override
-    public Product clone() {
-        try {
-            Product clone = (Product) super.clone();
-            clone.productAttributes = this.productAttributes.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Product copy() {
+        return new Product(this.getId(), this.getCode(), this.getArticle().copy(),
+                this.getProductAttributes().copy(), this.getPrice());
     }
 }

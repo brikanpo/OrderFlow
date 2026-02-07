@@ -4,14 +4,14 @@ import it.orderflow.view.cli.CLIViewsFactory;
 import it.orderflow.view.javafx.JavaFXViewsFactory;
 import it.orderflow.view.selectionviews.*;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public abstract class ViewsFactory {
 
-    private static final Map<ViewType, ViewsFactory> factories = new HashMap<>();
+    private static final Map<ViewType, ViewsFactory> factories = new EnumMap<>(ViewType.class);
 
-    public synchronized static ViewsFactory getFactory(ViewType type) {
+    public static synchronized ViewsFactory getFactory(ViewType type) {
         if (!factories.containsKey(type)) {
             ViewsFactory factory = switch (type) {
                 case CLI -> new CLIViewsFactory();

@@ -65,6 +65,6 @@ public class MockEmployeeDAO implements EmployeeDAO {
 
     @Override
     public void keepIntegrity(List<Statement<Employee>> statements) {
-
+        //is not called because save, update and delete do not raise exceptions
     }
 }

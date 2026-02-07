@@ -9,7 +9,10 @@ import it.orderflow.dao.ClientArticleDAO;
 import it.orderflow.dao.ProductDAO;
 import it.orderflow.dao.ProductInStockDAO;
 import it.orderflow.dao.SupplierArticleDAO;
-import it.orderflow.exceptions.*;
+import it.orderflow.exceptions.AlreadyInUseException;
+import it.orderflow.exceptions.EntityException;
+import it.orderflow.exceptions.InvalidInputException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.*;
 
 import java.math.BigDecimal;
@@ -70,7 +73,7 @@ public class ManageProductsLogicController extends TransactionSafeController {
         this.tempProductInStockBean = tempProductInStockBean;
     }
 
-    public List<ArticleBean> getSupplierArticlesList() throws DatabaseException {
+    public List<ArticleBean> getSupplierArticlesList() throws PersistenceException {
         List<SupplierArticle> supplierArticles = this.getSupplierArticleDAO().loadAll();
 
         return supplierArticles.stream()
@@ -83,7 +86,7 @@ public class ManageProductsLogicController extends TransactionSafeController {
     }
 
     public void saveNewProduct(ProductBean productBean)
-            throws AlreadyInUseException, CacheIntegrityException, DatabaseException, InvalidInputException {
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         Product targetProduct = this.getProductDAO().loadProduct(productBean.getCode());
         if (targetProduct == null) {
 
@@ -105,7 +108,7 @@ public class ManageProductsLogicController extends TransactionSafeController {
         } else throw new AlreadyInUseException(EntityException.Entity.PRODUCT, AlreadyInUseException.Param.CODE);
     }
 
-    public List<ArticleBean> getClientArticleList() throws DatabaseException {
+    public List<ArticleBean> getClientArticleList() throws PersistenceException {
         List<ClientArticle> clientArticles = this.getClientArticleDAO().loadAll();
 
         List<ArticleBean> clientArticleBeans = new ArrayList<>();
@@ -121,7 +124,7 @@ public class ManageProductsLogicController extends TransactionSafeController {
     }
 
     public void saveNewProductInStock(ProductInStockBean productInStockBean)
-            throws AlreadyInUseException, CacheIntegrityException, DatabaseException, InvalidInputException {
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         ProductInStock targetProductInStock = this.getProductInStockDAO().loadProductInStock(productInStockBean.getCode());
         if (targetProductInStock == null) {
 

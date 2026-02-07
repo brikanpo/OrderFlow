@@ -4,18 +4,18 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public abstract class Order implements Cloneable {
+public abstract class Order {
 
     private UUID id;
     private LocalDateTime registrationDate;
     private ProductsWithQuantity productsOrdered;
     private OrderState state;
 
-    public Order(ProductsWithQuantity productsOrdered) {
+    protected Order(ProductsWithQuantity productsOrdered) {
         this(UUID.randomUUID(), LocalDateTime.now(), productsOrdered, OrderState.WAITING);
     }
 
-    public Order(UUID id, LocalDateTime registrationDate, ProductsWithQuantity productsOrdered, OrderState state) {
+    protected Order(UUID id, LocalDateTime registrationDate, ProductsWithQuantity productsOrdered, OrderState state) {
         this.setId(id);
         this.setRegistrationDate(registrationDate);
         this.setProductsOrdered(productsOrdered);
@@ -68,14 +68,5 @@ public abstract class Order implements Cloneable {
 
     protected abstract void changeState(OrderState state);
 
-    @Override
-    public Order clone() {
-        try {
-            Order clone = (Order) super.clone();
-            clone.productsOrdered = this.productsOrdered.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
-    }
+    public abstract Order copy();
 }

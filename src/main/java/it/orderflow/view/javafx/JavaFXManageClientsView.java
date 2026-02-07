@@ -145,7 +145,7 @@ public class JavaFXManageClientsView extends JavaFXRootView implements ManageCli
         if (!this.addressField.getText().isBlank() && !this.capField.getText().isBlank() &&
                 !this.cityField.getText().isBlank() && !this.provinceField.getText().isBlank()) {
             AddressBean addressBean = new AddressBean();
-            addressBean.setAddress(this.addressField.getText());
+            addressBean.setStreetAddress(this.addressField.getText());
             addressBean.setCap(this.capField.getText());
             addressBean.setCity(this.cityField.getText());
             addressBean.setProvince(this.provinceField.getText());

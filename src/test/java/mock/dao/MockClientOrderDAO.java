@@ -69,6 +69,6 @@ public class MockClientOrderDAO implements ClientOrderDAO {
 
     @Override
     public void keepIntegrity(List<Statement<ClientOrder>> statements) {
-
+        //is not called because save, update and delete do not raise exceptions
     }
 }

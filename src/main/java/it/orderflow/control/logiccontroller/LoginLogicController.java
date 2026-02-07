@@ -7,6 +7,7 @@ import it.orderflow.control.Statement;
 import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.EmployeeDAO;
 import it.orderflow.exceptions.FailedAuthenticationException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.Employee;
 import it.orderflow.model.UserRole;
 
@@ -25,12 +26,12 @@ public class LoginLogicController extends TransactionSafeController {
         return this.employeeDAO;
     }
 
-    public boolean isFirstAccess() throws Exception {
+    public boolean isFirstAccess() throws PersistenceException {
         this.firstAccess = this.getEmployeeDAO().isEmpty();
         return this.firstAccess;
     }
 
-    public void authenticate(EmployeeAccessBean employeeAccessBean) throws Exception {
+    public void authenticate(EmployeeAccessBean employeeAccessBean) throws FailedAuthenticationException, PersistenceException {
         Employee tempEmployee = new Employee(employeeAccessBean.getEmail(), employeeAccessBean.getPassword());
         if (this.firstAccess) {
             tempEmployee.changeRole(UserRole.MANAGER);

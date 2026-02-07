@@ -75,7 +75,7 @@ class TestAddClientOrderLogicController {
             productsWithQuantity.addProducts(clientOrder.getProductsOrdered());
         }
 
-        assertEquals(productsWithQuantity.getProducts().size(), productBeanList.size());
+        assertEquals(productsWithQuantity.getProductWithQuantityList().size(), productBeanList.size());
     }
 
     @Test

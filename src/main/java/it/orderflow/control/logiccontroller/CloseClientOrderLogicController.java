@@ -8,6 +8,7 @@ import it.orderflow.dao.ClientOrderDAO;
 import it.orderflow.dao.ProductInStockDAO;
 import it.orderflow.exceptions.EntityException;
 import it.orderflow.exceptions.EntityNotFoundException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.*;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class CloseClientOrderLogicController extends TransactionSafeController {
         this.tempClientOrderBean = tempClientOrderBean;
     }
 
-    public List<ClientOrderBean> getReadyOrdersList() throws Exception {
+    public List<ClientOrderBean> getReadyOrdersList() throws PersistenceException {
         List<ClientOrder> readyClientOrders = this.getClientOrderDAO().loadByState(OrderState.READY);
 
         List<ClientOrderBean> clientOrderBeans = new ArrayList<>();
@@ -63,16 +64,16 @@ public class CloseClientOrderLogicController extends TransactionSafeController {
         this.setTempClientOrderBean(readyOrder);
     }
 
-    public void closeClientOrder() throws Exception {
+    public void closeClientOrder() throws EntityNotFoundException, PersistenceException {
         ClientOrder oldClientOrder = this.getClientOrderDAO().loadClientOrder(this.getTempClientOrderBean().getId());
         if (oldClientOrder != null) {
-            ClientOrder updatedClientOrder = oldClientOrder.clone();
+            ClientOrder updatedClientOrder = oldClientOrder.copy();
 
             updatedClientOrder.closeClientOrder(this.getLoggedEmployee().getId());
 
             //remove from inventory products in order
             List<ProductInStock> productsInStock = new ArrayList<>();
-            for (ProductWithQuantity productWithQuantity : updatedClientOrder.getProductsOrdered().getProducts()) {
+            for (ProductWithQuantity productWithQuantity : updatedClientOrder.getProductsOrdered().getProductWithQuantityList()) {
                 productsInStock.add(this.getProductInStockDAO().loadProductInStock(productWithQuantity.getCode()));
             }
             Inventory inventory = new Inventory(productsInStock);
@@ -82,7 +83,7 @@ public class CloseClientOrderLogicController extends TransactionSafeController {
             this.addStatement(this.getClientOrderDAO(), new Statement<>(List.of(updatedClientOrder, oldClientOrder), Statement.Type.UPDATE));
             for (int i = 0; i < productsInStock.size(); i++) {
                 ProductInStock oldVersion = productsInStock.get(i);
-                ProductInStock newVersion = inventory.getInventory().get(i);
+                ProductInStock newVersion = inventory.getProductInStockList().get(i);
                 this.addStatement(this.getProductInStockDAO(), new Statement<>(List.of(newVersion, oldVersion), Statement.Type.UPDATE));
             }
             this.endOperation();

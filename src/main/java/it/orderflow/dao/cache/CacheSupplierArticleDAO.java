@@ -19,7 +19,7 @@ public class CacheSupplierArticleDAO extends CacheGeneralDAO<SupplierArticle> im
     }
 
     private SupplierArticle copy(SupplierArticle supplierArticle) {
-        return supplierArticle.clone();
+        return supplierArticle.copy();
     }
 
     private void saveNewSupplierArticle(SupplierArticle clientArticle) {

@@ -47,5 +47,6 @@ public class CLIRootView extends RootView {
 
     @Override
     public void close() {
+        //at the moment all CLI views do not need to do any task on close()
     }
 }

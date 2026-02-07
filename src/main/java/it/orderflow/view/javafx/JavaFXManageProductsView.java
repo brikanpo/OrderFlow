@@ -156,10 +156,7 @@ public class JavaFXManageProductsView extends JavaFXRootView implements ManagePr
         return productBean;
     }
 
-    @Override
-    public ProductInStockBean getProductInStockBean() throws InvalidInputException {
-        ProductInStockBean productInStockBean = new ProductInStockBean();
-
+    private void setProductAttributes(ProductInStockBean productInStockBean) {
         if (!this.productAttributesContainer.getValues().isEmpty()) {
 
             List<String> attrValue = this.productAttributesContainer.getValues();
@@ -173,6 +170,13 @@ public class JavaFXManageProductsView extends JavaFXRootView implements ManagePr
             }
             productInStockBean.setProductAttributes(attributes);
         }
+    }
+
+    @Override
+    public ProductInStockBean getProductInStockBean() throws InvalidInputException {
+        ProductInStockBean productInStockBean = new ProductInStockBean();
+
+        this.setProductAttributes(productInStockBean);
 
         if (!this.priceField.getText().isBlank()) {
             try {

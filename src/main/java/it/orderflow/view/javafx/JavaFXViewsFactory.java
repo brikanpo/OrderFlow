@@ -23,7 +23,7 @@ public class JavaFXViewsFactory extends ViewsFactory {
 
     @Override
     public CloseClientOrderView getCloseClientOrderView() {
-        throw new UnsupportedOperationException();//return new JavaFXCloseClientOrderView();
+        throw new UnsupportedOperationException();
     }
 
     @Override

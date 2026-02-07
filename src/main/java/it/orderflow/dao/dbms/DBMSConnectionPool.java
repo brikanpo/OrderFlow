@@ -12,18 +12,18 @@ import java.util.concurrent.TimeUnit;
 
 public class DBMSConnectionPool {
 
-    private static DBMSConnectionPool instance;
-    private final String USER;
-    private final String PASS;
-    private final String DB_URL;
+    private static boolean isInitialized = false;
+    private final String user;
+    private final String password;
+    private final String dbUrl;
     private final BlockingQueue<Connection> pool;
 
     private DBMSConnectionPool() {
         ConfigManager configManager = ConfigManager.getInstance();
 
-        USER = configManager.getProperty("db.user");
-        PASS = configManager.getProperty("db.password");
-        DB_URL = configManager.getProperty("db.url");
+        user = configManager.getProperty("db.user");
+        password = configManager.getProperty("db.password");
+        dbUrl = configManager.getProperty("db.url");
         int maxConnections = Integer.parseUnsignedInt(configManager.getProperty("db.maxConnections"));
 
         this.pool = new LinkedBlockingQueue<>(maxConnections);
@@ -36,21 +36,21 @@ public class DBMSConnectionPool {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Connection pool not initialized", e);
         }
     }
 
     public static DBMSConnectionPool getInstance() {
-        if (instance == null) instance = new DBMSConnectionPool();
-        return instance;
+        isInitialized = true;
+        return Holder.INSTANCE;
     }
 
     public static boolean isOpen() {
-        return instance != null;
+        return isInitialized;
     }
 
     public Connection createNewConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASS);
+        return DriverManager.getConnection(dbUrl, user, password);
     }
 
     public Connection getConnection() throws DatabaseException {
@@ -65,6 +65,7 @@ public class DBMSConnectionPool {
 
             return conn;
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new DatabaseException(DatabaseException.ErrorType.START_CONNECTION, e);
         } catch (SQLException e) {
             throw new DatabaseException(DatabaseException.ErrorType.CONFIG_DB);
@@ -72,10 +73,8 @@ public class DBMSConnectionPool {
     }
 
     public void releaseConnection(Connection connection) {
-        if (connection != null) {
-            if (!pool.offer(connection)) {
-                close(connection);
-            }
+        if (connection != null && !pool.offer(connection)) {
+            close(connection);
         }
     }
 
@@ -83,7 +82,12 @@ public class DBMSConnectionPool {
         try {
             if (conn != null) conn.close();
         } catch (SQLException ignored) {
+            //Empty because if close() fails there is nothing to be done about it
         }
+    }
+
+    private static class Holder {
+        private static final DBMSConnectionPool INSTANCE = new DBMSConnectionPool();
     }
 
     public synchronized void closeAll() {

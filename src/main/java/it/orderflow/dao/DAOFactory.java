@@ -4,14 +4,14 @@ import it.orderflow.dao.cache.CacheDAOFactory;
 import it.orderflow.dao.dbms.DBMSDAOFactory;
 import it.orderflow.dao.file.FileDAOFactory;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public abstract class DAOFactory {
 
-    private static final Map<DAOType, DAOFactory> factories = new HashMap<>();
+    private static final Map<DAOType, DAOFactory> factories = new EnumMap<>(DAOType.class);
 
-    public synchronized static DAOFactory getFactory(DAOType type) {
+    public static synchronized DAOFactory getFactory(DAOType type) {
         if (!factories.containsKey(type)) {
             DAOFactory factory = switch (type) {
                 case DBMS -> DBMSDAOFactory.getInstance();

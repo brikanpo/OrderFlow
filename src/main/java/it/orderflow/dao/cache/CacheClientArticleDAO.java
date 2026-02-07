@@ -19,7 +19,7 @@ public class CacheClientArticleDAO extends CacheGeneralDAO<ClientArticle> implem
     }
 
     private ClientArticle copy(ClientArticle clientArticle) {
-        return clientArticle.clone();
+        return clientArticle.copy();
     }
 
     private void saveNewClientArticle(ClientArticle clientArticle) {

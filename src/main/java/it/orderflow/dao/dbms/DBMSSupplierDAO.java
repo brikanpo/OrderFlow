@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public class DBMSSupplierDAO extends DBMSGeneralDAO<Supplier> implements SupplierDAO {
 
+    private final String TABLE_NAME = "supplier";
+
     private UUID getSupplierId(Supplier supplier) {
         return supplier.getId();
     }
@@ -24,7 +26,7 @@ public class DBMSSupplierDAO extends DBMSGeneralDAO<Supplier> implements Supplie
     }
 
     private Supplier copy(Supplier supplier) {
-        return supplier.clone();
+        return supplier.copy();
     }
 
     private Supplier findByIdFromCache(UUID id) {
@@ -36,12 +38,12 @@ public class DBMSSupplierDAO extends DBMSGeneralDAO<Supplier> implements Supplie
     }
 
     private Supplier findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("supplier", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getSupplier, EntityException.Entity.SUPPLIER);
     }
 
     private Supplier findByEmailFromPersistence(String email) throws DatabaseException {
-        return this.findFromPersistence("supplier", "email", email,
+        return this.findFromPersistence(this.TABLE_NAME, "email", email,
                 this::getSupplier, EntityException.Entity.SUPPLIER);
     }
 
@@ -93,19 +95,19 @@ public class DBMSSupplierDAO extends DBMSGeneralDAO<Supplier> implements Supplie
 
     private void saveNewSupplier(Supplier supplier) throws DatabaseException {
         this.saveNewEntity(supplier, this::loadSupplier, this::getSupplierEmail, this::copy,
-                "INSERT INTO supplier (id, name, email, phone, transportFee) VALUES (?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, name, email, phone, transportFee) VALUES (?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER);
     }
 
     private void updateSupplier(Supplier supplier) throws DatabaseException {
         this.updateEntity(supplier, this::findSupplier, this::getSupplierId,
-                "UPDATE supplier SET name = ?, email = ?, phone = ?, transportFee = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET name = ?, email = ?, phone = ?, transportFee = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER);
     }
 
     private void deleteSupplier(Supplier supplier) throws DatabaseException {
         this.deleteEntity(supplier, this::findSupplier, this::getSupplierId,
-                "DELETE FROM supplier WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER);
     }
 
@@ -120,7 +122,7 @@ public class DBMSSupplierDAO extends DBMSGeneralDAO<Supplier> implements Supplie
 
     @Override
     public List<Supplier> loadAll() throws DatabaseException {
-        return this.loadAll("supplier", this::getSupplier, EntityException.Entity.SUPPLIER);
+        return this.loadAll(this.TABLE_NAME, this::getSupplier, EntityException.Entity.SUPPLIER);
     }
 
     @Override

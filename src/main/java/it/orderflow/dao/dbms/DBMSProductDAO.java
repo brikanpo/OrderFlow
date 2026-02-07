@@ -20,6 +20,7 @@ import java.util.UUID;
 public class DBMSProductDAO extends DBMSGeneralDAO<Product> implements ProductDAO {
 
     private final Gson gson = new Gson();
+    private final String TABLE_NAME = "supplierProduct";
 
     private final DBMSSupplierArticleDAO supplierArticleDAO;
 
@@ -37,7 +38,7 @@ public class DBMSProductDAO extends DBMSGeneralDAO<Product> implements ProductDA
     }
 
     private Product copy(Product product) {
-        return product.clone();
+        return product.copy();
     }
 
     private Product findByIdFromCache(UUID id) {
@@ -49,12 +50,12 @@ public class DBMSProductDAO extends DBMSGeneralDAO<Product> implements ProductDA
     }
 
     private Product findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("supplierProduct", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getProduct, EntityException.Entity.PRODUCT);
     }
 
     private Product findByCodeFromPersistence(String code) throws DatabaseException {
-        return this.findFromPersistence("supplierProduct", "code", code,
+        return this.findFromPersistence(this.TABLE_NAME, "code", code,
                 this::getProduct, EntityException.Entity.PRODUCT);
     }
 
@@ -107,19 +108,19 @@ public class DBMSProductDAO extends DBMSGeneralDAO<Product> implements ProductDA
 
     private void saveNewProduct(Product product) throws DatabaseException {
         this.saveNewEntity(product, this::loadProduct, this::getProductCode, this::copy,
-                "INSERT INTO supplierProduct (id, code, articleId, productAttributes, price) VALUES (?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, code, articleId, productAttributes, price) VALUES (?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT);
     }
 
     private void updateProduct(Product product) throws DatabaseException {
         this.updateEntity(product, this::findProduct, this::getProductId,
-                "UPDATE supplierProduct SET code = ?, articleId = ?, productAttributes = ?, price = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET code = ?, articleId = ?, productAttributes = ?, price = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT);
     }
 
     private void deleteProduct(Product product) throws DatabaseException {
         this.deleteEntity(product, this::findProduct, this::getProductId,
-                "DELETE FROM supplierProduct WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.PRODUCT);
     }
 
@@ -130,7 +131,7 @@ public class DBMSProductDAO extends DBMSGeneralDAO<Product> implements ProductDA
 
     @Override
     public List<Product> loadAll() throws DatabaseException {
-        return this.loadAll("supplierProduct", this::getProduct, EntityException.Entity.PRODUCT);
+        return this.loadAll(this.TABLE_NAME, this::getProduct, EntityException.Entity.PRODUCT);
     }
 
     @Override

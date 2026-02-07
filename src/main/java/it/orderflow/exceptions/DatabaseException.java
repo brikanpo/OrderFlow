@@ -1,6 +1,6 @@
 package it.orderflow.exceptions;
 
-public class DatabaseException extends Exception {
+public class DatabaseException extends PersistenceException {
 
     public DatabaseException(DatabaseException.ErrorType type) {
         super(type.defaultMessage);

@@ -23,7 +23,7 @@ public class CLIViewsFactory extends ViewsFactory {
 
     @Override
     public CloseClientOrderView getCloseClientOrderView() {
-        throw new UnsupportedOperationException();//return new CLICloseClientOrderView();
+        throw new UnsupportedOperationException();
     }
 
     @Override

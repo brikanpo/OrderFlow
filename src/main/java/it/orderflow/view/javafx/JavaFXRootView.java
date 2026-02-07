@@ -3,6 +3,7 @@ package it.orderflow.view.javafx;
 import it.orderflow.view.RootView;
 import it.orderflow.view.ViewEvent;
 import it.orderflow.view.javafx.mycomponents.MyErrorMessage;
+import it.orderflow.view.javafx.mycomponents.MySuccessMessage;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -43,6 +44,10 @@ public class JavaFXRootView extends RootView {
 
     @Override
     public void displaySuccessMessage(String message) {
+        this.runOnFXThread(() -> {
+            MySuccessMessage successMessage = new MySuccessMessage(message);
+            successMessage.showAndWait();
+        });
     }
 
     @Override

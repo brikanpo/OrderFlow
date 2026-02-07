@@ -1,6 +1,6 @@
 package it.orderflow.model;
 
-public class Attribute implements Cloneable {
+public class Attribute {
 
     private String id;
     private String value;
@@ -30,12 +30,7 @@ public class Attribute implements Cloneable {
         this.value = value;
     }
 
-    @Override
-    public Attribute clone() {
-        try {
-            return (Attribute) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Attribute copy() {
+        return new Attribute(this.getId(), this.getValue());
     }
 }

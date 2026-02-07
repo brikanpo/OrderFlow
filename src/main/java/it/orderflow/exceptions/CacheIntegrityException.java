@@ -1,6 +1,6 @@
 package it.orderflow.exceptions;
 
-public class CacheIntegrityException extends Exception {
+public class CacheIntegrityException extends PersistenceException {
 
     public CacheIntegrityException() {
         super("There was a fatal error while trying to keep your data integrity. " +

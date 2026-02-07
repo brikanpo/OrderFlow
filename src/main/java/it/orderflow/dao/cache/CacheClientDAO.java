@@ -19,7 +19,7 @@ public class CacheClientDAO extends CacheGeneralDAO<Client> implements ClientDAO
     }
 
     private Client copy(Client client) {
-        return client.clone();
+        return client.copy();
     }
 
     private Client findClient(UUID id) {

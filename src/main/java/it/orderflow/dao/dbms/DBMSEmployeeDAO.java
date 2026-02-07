@@ -15,6 +15,8 @@ import java.util.UUID;
 
 public class DBMSEmployeeDAO extends DBMSGeneralDAO<Employee> implements EmployeeDAO {
 
+    private final String TABLE_NAME = "employee";
+
     private UUID getEmployeeId(Employee employee) {
         return employee.getId();
     }
@@ -28,7 +30,7 @@ public class DBMSEmployeeDAO extends DBMSGeneralDAO<Employee> implements Employe
     }
 
     private Employee copy(Employee employee) {
-        return employee.clone();
+        return employee.copy();
     }
 
     private Employee findByIdFromCache(UUID id) {
@@ -44,17 +46,17 @@ public class DBMSEmployeeDAO extends DBMSGeneralDAO<Employee> implements Employe
     }
 
     private Employee findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("employee", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getEmployee, EntityException.Entity.EMPLOYEE);
     }
 
     private Employee findByEmailFromPersistence(String email) throws DatabaseException {
-        return this.findFromPersistence("employee", "email", email,
+        return this.findFromPersistence(this.TABLE_NAME, "email", email,
                 this::getEmployee, EntityException.Entity.EMPLOYEE);
     }
 
     private List<Employee> findByRoleFromPersistence(UserRole userRole) throws DatabaseException {
-        return this.findMatchesFromPersistence("employee", "userRole", userRole.toString(),
+        return this.findMatchesFromPersistence(this.TABLE_NAME, "userRole", userRole.toString(),
                 this::getEmployeeList, EntityException.Entity.EMPLOYEE);
     }
 
@@ -110,19 +112,19 @@ public class DBMSEmployeeDAO extends DBMSGeneralDAO<Employee> implements Employe
 
     private void saveNewEmployee(Employee employee) throws DatabaseException {
         this.saveNewEntity(employee, this::loadEmployee, this::getEmployeeEmail, this::copy,
-                "INSERT INTO employee (id, name, email, phone, passwordHash, userRole) VALUES (?,?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, name, email, phone, passwordHash, userRole) VALUES (?,?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.EMPLOYEE);
     }
 
     private void updateEmployee(Employee employee) throws DatabaseException {
         this.updateEntity(employee, this::findEmployee, this::getEmployeeId,
-                "UPDATE employee SET name = ?, email = ?, phone = ?, passwordHash = ?, userRole = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET name = ?, email = ?, phone = ?, passwordHash = ?, userRole = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.EMPLOYEE);
     }
 
     private void deleteEmployee(Employee employee) throws DatabaseException {
         this.deleteEntity(employee, this::findEmployee, this::getEmployeeId,
-                "DELETE FROM employee WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.EMPLOYEE);
     }
 
@@ -139,12 +141,12 @@ public class DBMSEmployeeDAO extends DBMSGeneralDAO<Employee> implements Employe
 
     @Override
     public List<Employee> loadAll() throws DatabaseException {
-        return this.loadAll("employee", this::getEmployee, EntityException.Entity.EMPLOYEE);
+        return this.loadAll(this.TABLE_NAME, this::getEmployee, EntityException.Entity.EMPLOYEE);
     }
 
     @Override
-    public boolean isEmpty() throws Exception {
-        return this.isEmpty("employee", EntityException.Entity.EMPLOYEE);
+    public boolean isEmpty() throws DatabaseException {
+        return this.isEmpty(this.TABLE_NAME, EntityException.Entity.EMPLOYEE);
     }
 
     @Override

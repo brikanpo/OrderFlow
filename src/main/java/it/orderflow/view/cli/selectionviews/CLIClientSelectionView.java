@@ -39,7 +39,7 @@ public class CLIClientSelectionView extends CLIAbstractSelectionView<ClientBean>
 
             if (ab != null) {
                 System.out.printf("%-2d) | %-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
-                        (i + 1), cb.getName(), cb.getEmail(), phone, ab.getAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
+                        (i + 1), cb.getName(), cb.getEmail(), phone, ab.getStreetAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
             } else {
                 System.out.printf("%-2d) | %-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
                         (i + 1), cb.getName(), cb.getEmail(), phone, "", "", "", "");
@@ -73,21 +73,21 @@ public class CLIClientSelectionView extends CLIAbstractSelectionView<ClientBean>
 
     @Override
     protected void printHeader() {
-
+        //this class does not need this operation because does not use super method displayItems
     }
 
     @Override
     protected void printRow(int position, ClientBean bean) {
-
+        //this class does not need this operation because does not use super method displayItems
     }
 
     @Override
     protected void printSelectionMessage(boolean singleSelection) {
-
+        //this class does not need this operation because does not use super method displayItems
     }
 
     @Override
     protected void onItemSelected(boolean singleSelection) {
-
+        //this class does not need this operation because does not use super method displayItems
     }
 }

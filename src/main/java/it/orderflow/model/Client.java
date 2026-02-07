@@ -2,7 +2,7 @@ package it.orderflow.model;
 
 import java.util.UUID;
 
-public class Client extends Contact implements Cloneable {
+public class Client extends Contact {
 
     private Address address;
 
@@ -28,14 +28,7 @@ public class Client extends Contact implements Cloneable {
         this.setAddress(address);
     }
 
-    @Override
-    public Client clone() {
-        try {
-            Client clone = (Client) super.clone();
-            if (this.address != null) clone.address = this.address.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Client copy() {
+        return new Client(this.getId(), this.getName(), this.getEmail(), this.getPhone(), this.getAddress().copy());
     }
 }

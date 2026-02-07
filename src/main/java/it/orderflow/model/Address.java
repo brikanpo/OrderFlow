@@ -1,57 +1,36 @@
 package it.orderflow.model;
 
-public class Address implements Cloneable {
+public class Address {
 
-    private String address;
-    private String cap;
-    private String city;
-    private String province;
+    private final String streetAddress;
+    private final String cap;
+    private final String city;
+    private final String province;
 
-    public Address(String address, String cap, String city, String province) {
-        this.address = address;
+    public Address(String streetAddress, String cap, String city, String province) {
+        this.streetAddress = streetAddress;
         this.cap = cap;
         this.city = city;
         this.province = province;
     }
 
-    public String getAddress() {
-        return this.address;
-    }
-
-    private void setAddress(String address) {
-        this.address = address;
+    public String getStreetAddress() {
+        return this.streetAddress;
     }
 
     public String getCap() {
         return this.cap;
     }
 
-    private void setCap(String cap) {
-        this.cap = cap;
-    }
-
     public String getCity() {
         return this.city;
-    }
-
-    private void setCity(String city) {
-        this.city = city;
     }
 
     public String getProvince() {
         return this.province;
     }
 
-    private void setProvince(String province) {
-        this.province = province;
-    }
-
-    @Override
-    public Address clone() {
-        try {
-            return (Address) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Address copy() {
+        return new Address(this.getStreetAddress(), this.getCap(), this.getCity(), this.getProvince());
     }
 }

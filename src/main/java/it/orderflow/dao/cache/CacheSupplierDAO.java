@@ -19,7 +19,7 @@ public class CacheSupplierDAO extends CacheGeneralDAO<Supplier> implements Suppl
     }
 
     private Supplier copy(Supplier supplier) {
-        return supplier.clone();
+        return supplier.copy();
     }
 
     private Supplier findSupplier(UUID id) {

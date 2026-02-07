@@ -28,7 +28,7 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
     public JavaFXAddClientOrderView() {
         super();
 
-        title = new MyTitle();
+        title = new MyTitle("Add client order");
 
         infoLabel = new MyLabel();
 
@@ -47,8 +47,6 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
     public void displayInsertionOptions() {
         this.runOnFXThread(() -> {
             MyVBox layout = new MyVBox();
-
-            title.setText("Add client order");
 
             infoLabel.setText("How do you want to selects the products ordered?");
 
@@ -82,8 +80,6 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
         this.runOnFXThread(() -> {
             MyVBox layout = new MyVBox();
 
-            title.setText("Add client order");
-
             infoLabel.setText("Selects the quantities of the products ordered");
 
             MyTableViewProductWithQuantity table = new MyTableViewProductWithQuantity(pwqbList, true);
@@ -110,8 +106,6 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
         this.runOnFXThread(() -> {
             MyVBox layout = new MyVBox();
 
-            title.setText("Add client order");
-
             infoLabel.setText("Selects the quantities of the unavailable products you want to keep");
 
             MyTableViewProductWithQuantity table = new MyTableViewProductWithQuantity(pwqbList, true);
@@ -132,8 +126,6 @@ public class JavaFXAddClientOrderView extends JavaFXRootView implements AddClien
     public void displayClientOrderDetails(ClientOrderBean clientOrder) {
         this.runOnFXThread(() -> {
             MyVBox layout = new MyVBox();
-
-            title.setText("Add client order");
 
             infoLabel.setText("These are the client info");
 

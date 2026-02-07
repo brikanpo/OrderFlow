@@ -3,7 +3,7 @@ package it.orderflow.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class Supplier extends Contact implements Cloneable {
+public class Supplier extends Contact {
 
     private BigDecimal transportFee;
 
@@ -29,12 +29,7 @@ public class Supplier extends Contact implements Cloneable {
         this.setTransportFee(transportFee);
     }
 
-    @Override
-    public Supplier clone() {
-        try {
-            return (Supplier) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Supplier copy() {
+        return new Supplier(this.getId(), this.getName(), this.getEmail(), this.getPhone(), this.getTransportFee());
     }
 }

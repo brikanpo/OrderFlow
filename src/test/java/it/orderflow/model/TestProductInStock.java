@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestProductInStock {
+class TestProductInStock {
 
     private final MockEntity me = new MockEntity();
     private Product mockProduct;

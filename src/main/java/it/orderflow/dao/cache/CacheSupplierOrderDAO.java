@@ -20,7 +20,7 @@ public class CacheSupplierOrderDAO extends CacheGeneralDAO<SupplierOrder> implem
     }
 
     private SupplierOrder copy(SupplierOrder supplierOrder) {
-        return supplierOrder.clone();
+        return supplierOrder.copy();
     }
 
     private void saveNewSupplierOrder(SupplierOrder supplierOrder) {

@@ -60,8 +60,8 @@ public abstract class CLIAbstractSelectionView<T> extends CLIRootView {
 
             String[] indexList = this.indexes.split(",");
 
-            for (String index : indexList) {
-                itemsList.add(this.items.get(Integer.parseInt(index) - 1));
+            for (String tempIndex : indexList) {
+                itemsList.add(this.items.get(Integer.parseInt(tempIndex) - 1));
             }
 
             return itemsList;

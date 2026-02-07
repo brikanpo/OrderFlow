@@ -1,14 +1,13 @@
 package it.orderflow.dao;
 
 import it.orderflow.control.Statement;
-import it.orderflow.exceptions.CacheIntegrityException;
-import it.orderflow.exceptions.DatabaseException;
+import it.orderflow.exceptions.PersistenceException;
 
 import java.util.List;
 
 public interface TransactionControl<T> {
 
-    void executeTransaction(List<Statement<T>> statements) throws DatabaseException;
+    void executeTransaction(List<Statement<T>> statements) throws PersistenceException;
 
-    void keepIntegrity(List<Statement<T>> statements) throws CacheIntegrityException, DatabaseException;
+    void keepIntegrity(List<Statement<T>> statements) throws PersistenceException;
 }

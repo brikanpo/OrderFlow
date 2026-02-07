@@ -9,6 +9,7 @@ import it.orderflow.dao.EmployeeDAO;
 import it.orderflow.exceptions.EntityException;
 import it.orderflow.exceptions.EntityNotFoundException;
 import it.orderflow.exceptions.InvalidInputException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.Employee;
 
 import java.util.List;
@@ -35,16 +36,17 @@ public class ManagePersonalInfoLogicController extends TransactionSafeController
         this.loggedEmployee = loggedEmployee;
     }
 
-    public boolean hasDefaultPassword() throws Exception {
+    public boolean hasDefaultPassword() throws PersistenceException {
         Employee targetEmployee = this.getEmployeeDAO().loadEmployee(this.getLoggedEmployee().getEmail());
         return targetEmployee.hasDefaultPassword();
     }
 
-    public void saveNewPassword(EmployeeAccessBean employeeAccessBean) throws Exception {
+    public void saveNewPassword(EmployeeAccessBean employeeAccessBean)
+            throws EntityNotFoundException, InvalidInputException, PersistenceException {
         if (!employeeAccessBean.getPassword().isBlank()) {
             Employee oldEmployee = this.getEmployeeDAO().loadEmployee(employeeAccessBean.getEmail());
             if (oldEmployee != null) {
-                Employee newEmployee = oldEmployee.clone();
+                Employee newEmployee = oldEmployee.copy();
 
                 Employee tempEmployee = new Employee(this.getLoggedEmployee().getEmail(), employeeAccessBean.getPassword());
                 if (tempEmployee.hasDefaultPassword()) {
@@ -66,10 +68,10 @@ public class ManagePersonalInfoLogicController extends TransactionSafeController
         }
     }
 
-    public void saveNewPersonalInfo(EmployeeBean employeeBean) throws Exception {
+    public void saveNewPersonalInfo(EmployeeBean employeeBean) throws EntityNotFoundException, PersistenceException {
         Employee oldEmployee = this.getEmployeeDAO().loadEmployee(this.getLoggedEmployee().getEmail());
         if (oldEmployee != null) {
-            Employee newEmployee = oldEmployee.clone();
+            Employee newEmployee = oldEmployee.copy();
 
             String name = employeeBean.getName();
             if (name != null) newEmployee.changeName(name);

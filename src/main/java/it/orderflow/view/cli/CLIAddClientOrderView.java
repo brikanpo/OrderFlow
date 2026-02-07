@@ -11,6 +11,8 @@ import java.util.List;
 
 public class CLIAddClientOrderView extends CLIRootView implements AddClientOrderView {
 
+    private final String TITLE = "Add client order";
+
     private String number;
     private List<ProductBean> productsList;
     private List<String> quantitiesProductsList;
@@ -18,25 +20,25 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     private List<String> quantitiesUnavailableProductsList;
 
     private String insertQuantity(String message) {
-        String number;
+        String tempNumber;
         do {
             System.out.print(message);
-            number = this.scanner.nextLine();
+            tempNumber = this.scanner.nextLine();
             try {
-                Integer.parseInt(number);
+                Integer.parseInt(tempNumber);
             } catch (NumberFormatException e) {
-                number = null;
+                tempNumber = null;
             }
-        } while (number == null);
+        } while (tempNumber == null);
 
-        return number;
+        return tempNumber;
     }
 
     @Override
     public void displayInsertionOptions() {
         boolean chosenAnOption = false;
         while (!chosenAnOption) {
-            this.printTitle("Add client order");
+            this.printTitle(this.TITLE);
             System.out.println("How do you want to select the products to order?");
             System.out.println("1) From this client past orders");
             System.out.println("2) From the articles list");
@@ -66,7 +68,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
         this.number = null;
         this.productsList = products;
         this.quantitiesProductsList = new ArrayList<>();
-        this.printTitle("Add client order");
+        this.printTitle(this.TITLE);
         System.out.println("Inserts the quantity to order next to every product selected");
         for (ProductBean pb : products) {
             this.quantitiesProductsList.add(this.insertQuantity(pb.getArticleName() + " " + pb.getCode() + " : "));
@@ -78,7 +80,7 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     public void displayUnavailableProducts(List<ProductWithQuantityBean> products) {
         this.quantitiesProductsList = null;
         this.unavailableProductsList = products;
-        this.printTitle("Add client order");
+        this.printTitle(this.TITLE);
         System.out.println("These are the unavailable products");
         System.out.printf("%-2s) | %-25s | %-100s | %-12s |%n",
                 "N°", "Article Name", "Code", "Quantity");
@@ -103,11 +105,12 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
     @Override
     public void displayClientOrderDetails(ClientOrderBean clientOrder) {
         this.quantitiesUnavailableProductsList = null;
-        this.printTitle("Add client order");
+        this.printTitle(this.TITLE);
 
         ClientBean cb = clientOrder.getClientBean();
         System.out.println("These are the client info");
-        System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
+        String clientInfoFormat = "%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n";
+        System.out.printf(clientInfoFormat,
                 "Name", "Email", "Phone", "Address", "CAP", "City", "Province");
 
         String phone = cb.getPhone();
@@ -116,10 +119,10 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
         AddressBean ab = cb.getAddressBean();
 
         if (ab != null) {
-            System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
-                    cb.getName(), cb.getEmail(), phone, ab.getAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
+            System.out.printf(clientInfoFormat,
+                    cb.getName(), cb.getEmail(), phone, ab.getStreetAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
         } else {
-            System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
+            System.out.printf(clientInfoFormat,
                     cb.getName(), cb.getEmail(), phone, "", "", "", "");
         }
 
@@ -144,11 +147,11 @@ public class CLIAddClientOrderView extends CLIRootView implements AddClientOrder
 
     @Override
     public int selectedNumberOfPastOrders() throws InvalidInputException {
-        int number = Integer.parseInt(this.number);
+        int tempNumber = Integer.parseInt(this.number);
 
-        if (number >= 1) {
+        if (tempNumber >= 1) {
 
-            return number;
+            return tempNumber;
 
         } else throw new InvalidInputException(InvalidInputException.InputType.QUANTITY_1_OR_HIGHER);
     }

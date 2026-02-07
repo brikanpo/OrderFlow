@@ -79,7 +79,8 @@ public class SupplierOrder extends Order {
     }
 
     @Override
-    public SupplierOrder clone() {
-        return (SupplierOrder) super.clone();
+    public SupplierOrder copy() {
+        return new SupplierOrder(this.getId(), this.getRegistrationDate(), this.getProductsOrdered().copy(),
+                this.getState(), this.getSupplier().copy(), this.getDeliveryDate(), this.getWarehouseWorkerId());
     }
 }

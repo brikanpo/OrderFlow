@@ -3,7 +3,7 @@ package it.orderflow.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class Article {
+public abstract class Article {
 
     private UUID id;
     private String name;
@@ -13,13 +13,13 @@ public class Article {
     private Attributes possibleAttributes;
     private BigDecimal iva;
 
-    public Article(String name, String category) {
+    protected Article(String name, String category) {
         this(UUID.randomUUID(), name, category, null, new Attributes(), new Attributes(),
                 new BigDecimal("0.22"));
     }
 
-    public Article(UUID id, String name, String category, String description, Attributes articleAttributes,
-                   Attributes possibleAttributes, BigDecimal iva) {
+    protected Article(UUID id, String name, String category, String description, Attributes articleAttributes,
+                      Attributes possibleAttributes, BigDecimal iva) {
         this.setId(id);
         this.setName(name);
         this.setCategory(category);
@@ -100,4 +100,6 @@ public class Article {
     public void changeIva(BigDecimal iva) {
         this.setIva(iva);
     }
+
+    public abstract Article copy();
 }

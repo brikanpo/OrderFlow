@@ -55,6 +55,6 @@ public class MockProductInStockDAO implements ProductInStockDAO {
 
     @Override
     public void keepIntegrity(List<Statement<ProductInStock>> statements) {
-
+        //is not called because save, update and delete do not raise exceptions
     }
 }

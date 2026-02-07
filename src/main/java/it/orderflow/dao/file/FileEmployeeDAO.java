@@ -1,10 +1,11 @@
 package it.orderflow.dao.file;
 
-//import com.google.code.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import it.orderflow.control.Statement;
 import it.orderflow.dao.EmployeeDAO;
+import it.orderflow.exceptions.EntityException;
+import it.orderflow.exceptions.FilePersistenceException;
 import it.orderflow.model.Employee;
 import it.orderflow.model.UserRole;
 
@@ -46,21 +47,21 @@ public class FileEmployeeDAO implements EmployeeDAO {
         return null;
     }
 
-    private Employee findByIdFromPersistence(UUID id) throws Exception {
+    private Employee findByIdFromPersistence(UUID id) throws FilePersistenceException {
         for (Employee employee : this.loadAll()) {
             if (employee.getId().equals(id)) return employee;
         }
         return null;
     }
 
-    private Employee findByEmailFromPersistence(String email) throws Exception {
+    private Employee findByEmailFromPersistence(String email) throws FilePersistenceException {
         for (Employee employee : this.loadAll()) {
             if (employee.getEmail().equals(email)) return employee;
         }
         return null;
     }
 
-    private Employee findEmployee(UUID id) throws Exception {
+    private Employee findEmployee(UUID id) throws FilePersistenceException {
         Employee employee = this.findByIdFromCache(id);
         if (employee == null) {
             employee = this.findByIdFromPersistence(id);
@@ -71,19 +72,16 @@ public class FileEmployeeDAO implements EmployeeDAO {
         return employee;
     }
 
-    private void saveNewEmployee(Employee employee) throws Exception {
-        Employee employeeById = null;
-        try {
-            employeeById = loadEmployee(employee.getEmail());
-        } catch (Exception ignore) {
-        }
+    private void saveNewEmployee(Employee employee) throws FilePersistenceException {
+        Employee employeeById = loadEmployee(employee.getEmail());
+
         if (employeeById == null) {
-            this.getCache().add(employee.clone());
+            this.getCache().add(employee.copy());
             this.saveToFile();
         }
     }
 
-    private void updateEmployee(Employee employee) throws Exception {
+    private void updateEmployee(Employee employee) throws FilePersistenceException {
         Employee employeeById = this.findEmployee(employee.getId());
 
         if (employeeById != null) {
@@ -92,7 +90,7 @@ public class FileEmployeeDAO implements EmployeeDAO {
         }
     }
 
-    private void deleteEmployee(Employee employee) throws Exception {
+    private void deleteEmployee(Employee employee) throws FilePersistenceException {
         Employee employeeById = this.findEmployee(employee.getId());
 
         if (employeeById != null) {
@@ -101,17 +99,17 @@ public class FileEmployeeDAO implements EmployeeDAO {
         }
     }
 
-    private void saveToFile() throws Exception {
+    private void saveToFile() throws FilePersistenceException {
         try (Writer writer = new FileWriter(FILE_PATH)) {
             gson.toJson(this.getCache(), writer);
             this.isUnmodified = false;
         } catch (IOException e) {
-            throw new Exception("Errore salvataggio");
+            throw new FilePersistenceException(FilePersistenceException.ErrorType.WRITE, e);
         }
     }
 
     @Override
-    public Employee loadEmployee(String email) throws Exception {
+    public Employee loadEmployee(String email) throws FilePersistenceException {
         Employee employee = this.findByEmailFromCache(email);
         if (employee == null) {
             employee = this.findByEmailFromPersistence(email);
@@ -123,7 +121,7 @@ public class FileEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public List<Employee> loadByRole(UserRole role) throws Exception {
+    public List<Employee> loadByRole(UserRole role) throws FilePersistenceException {
         List<Employee> result = new ArrayList<>();
         for (Employee employee : this.loadAll()) {
             if (employee.getUserRole() == role) result.add(employee);
@@ -132,12 +130,13 @@ public class FileEmployeeDAO implements EmployeeDAO {
     }
 
     @Override
-    public List<Employee> loadAll() throws Exception {
+    public List<Employee> loadAll() throws FilePersistenceException {
         if (this.isUnmodified) {
             return this.getCache();
         } else {
             File file = new File(FILE_PATH);
-            if (!file.exists()) throw new Exception("File non esiste");
+            if (!file.exists())
+                throw new FilePersistenceException(FilePersistenceException.ErrorType.NOT_FOUND, EntityException.Entity.EMPLOYEE);
 
             try (Reader reader = new FileReader(file)) {
                 Type listType = new TypeToken<ArrayList<Employee>>() {
@@ -146,18 +145,18 @@ public class FileEmployeeDAO implements EmployeeDAO {
                 this.isUnmodified = true;
                 return this.employees;
             } catch (IOException e) {
-                throw new Exception("Errore");
+                throw new FilePersistenceException(FilePersistenceException.ErrorType.READ, e);
             }
         }
 
     }
 
     @Override
-    public boolean isEmpty() throws Exception {
+    public boolean isEmpty() throws FilePersistenceException {
         return this.loadAll().isEmpty();
     }
 
-    private void rollback(List<Statement<Employee>> statements) throws Exception {
+    private void rollback(List<Statement<Employee>> statements) throws FilePersistenceException {
         try {
             for (Statement<Employee> statement : statements.reversed()) {
                 if (statement.isCompleted()) {
@@ -172,12 +171,12 @@ public class FileEmployeeDAO implements EmployeeDAO {
             }
             // all completed statement reverted
         } catch (Exception e) {
-            throw new Exception("Integrity", e);
+            throw new FilePersistenceException(FilePersistenceException.ErrorType.INTEGRITY, e);
         }
     }
 
     @Override
-    public void executeTransaction(List<Statement<Employee>> statements) throws Exception {
+    public void executeTransaction(List<Statement<Employee>> statements) throws FilePersistenceException {
         try {
             for (Statement<Employee> statement : statements) {
                 switch (statement.getStatementType()) {
@@ -189,16 +188,14 @@ public class FileEmployeeDAO implements EmployeeDAO {
                 statement.completed();
             }
             // all statements successful
-        } catch (Exception e) {
+        } catch (FilePersistenceException e) {
             // one statement failed. Rollback to previous state
             this.rollback(statements);
-
-            throw e;
         }
     }
 
     @Override
-    public void keepIntegrity(List<Statement<Employee>> statements) throws Exception {
+    public void keepIntegrity(List<Statement<Employee>> statements) throws FilePersistenceException {
         // check if all the statement of this dao have already been completed
         boolean result = true;
         for (Statement<Employee> statement : statements) {

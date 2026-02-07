@@ -18,6 +18,7 @@ import java.util.UUID;
 public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implements ClientArticleDAO {
 
     private final Gson gson = new Gson();
+    private final String TABLE_NAME = "clientArticle";
 
     private UUID getClientArticleId(ClientArticle clientArticle) {
         return clientArticle.getId();
@@ -28,7 +29,7 @@ public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implemen
     }
 
     private ClientArticle copy(ClientArticle clientArticle) {
-        return clientArticle.clone();
+        return clientArticle.copy();
     }
 
     private ClientArticle findByIdFromCache(UUID id) {
@@ -40,12 +41,12 @@ public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implemen
     }
 
     private ClientArticle findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("clientArticle", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getClientArticle, EntityException.Entity.CLIENT_ARTICLE);
     }
 
     private ClientArticle findByNameFromPersistence(String name) throws DatabaseException {
-        return this.findFromPersistence("clientArticle", "name", name,
+        return this.findFromPersistence(this.TABLE_NAME, "name", name,
                 this::getClientArticle, EntityException.Entity.CLIENT_ARTICLE);
     }
 
@@ -103,19 +104,19 @@ public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implemen
 
     private void saveNewClientArticle(ClientArticle clientArticle) throws DatabaseException {
         this.saveNewEntity(clientArticle, this::loadClientArticle, this::getClientArticleName, this::copy,
-                "INSERT INTO clientArticle (id, name, category, description, articleAttributes, possibleAttributes, iva, supplierArticleId) VALUES (?,?,?,?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, name, category, description, articleAttributes, possibleAttributes, iva, supplierArticleId) VALUES (?,?,?,?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ARTICLE);
     }
 
     private void updateClientArticle(ClientArticle clientArticle) throws DatabaseException {
         this.updateEntity(clientArticle, this::findClientArticle, this::getClientArticleId,
-                "UPDATE clientArticle SET name = ?, category = ?, description = ?, articleAttributes = ?, possibleAttributes = ?, iva = ?, supplierArticleId = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET name = ?, category = ?, description = ?, articleAttributes = ?, possibleAttributes = ?, iva = ?, supplierArticleId = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ARTICLE);
     }
 
     private void deleteClientArticle(ClientArticle clientArticle) throws DatabaseException {
         this.deleteEntity(clientArticle, this::findClientArticle, this::getClientArticleId,
-                "DELETE FROM clientArticle WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ARTICLE);
     }
 
@@ -130,7 +131,7 @@ public class DBMSClientArticleDAO extends DBMSGeneralDAO<ClientArticle> implemen
 
     @Override
     public List<ClientArticle> loadAll() throws DatabaseException {
-        return this.loadAll("clientArticle", this::getClientArticle, EntityException.Entity.CLIENT_ARTICLE);
+        return this.loadAll(this.TABLE_NAME, this::getClientArticle, EntityException.Entity.CLIENT_ARTICLE);
     }
 
     @Override

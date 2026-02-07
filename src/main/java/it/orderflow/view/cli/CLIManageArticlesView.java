@@ -21,7 +21,8 @@ public class CLIManageArticlesView extends CLIRootView implements ManageArticles
         String attributeName;
         String attributeValue;
         this.articleAttributes = new Attributes();
-        while (true) {
+        boolean keepInserting = true;
+        while (keepInserting) {
             System.out.println("You can keep inserting new pairs of attribute name and value till you leave both blank ");
             System.out.print("Insert attribute name: ");
             attributeName = scanner.nextLine();
@@ -29,7 +30,7 @@ public class CLIManageArticlesView extends CLIRootView implements ManageArticles
             attributeValue = scanner.nextLine();
 
             if (attributeName.isBlank() && attributeValue.isBlank()) {
-                break;
+                keepInserting = false;
             } else if (attributeName.isBlank() || attributeValue.isBlank()) {
                 continue;
             }
@@ -56,6 +57,7 @@ public class CLIManageArticlesView extends CLIRootView implements ManageArticles
 
     private void insertArticleInfo(ViewEvent event) {
         String type;
+        String insert = "Insert ";
 
         if (event == ViewEvent.SAVE_SUPPLIER_ARTICLE) {
             type = "supplier";
@@ -63,12 +65,12 @@ public class CLIManageArticlesView extends CLIRootView implements ManageArticles
             type = "client";
         }
 
-        System.out.print("Insert " + type + " article name: ");
+        System.out.print(insert + type + " article name: ");
         this.name = scanner.nextLine();
-        System.out.print("Insert " + type + " article category: ");
+        System.out.print(insert + type + " article category: ");
         this.category = scanner.nextLine();
         System.out.println("The following fields are optional. To ignore leave blank");
-        System.out.print("Insert " + type + " article description: ");
+        System.out.print(insert + type + " article description: ");
         this.description = scanner.nextLine();
         System.out.println("You can choose to insert the name of an attribute and its value for this article " +
                 "(e.g., name: material, value: wood)");
@@ -76,7 +78,7 @@ public class CLIManageArticlesView extends CLIRootView implements ManageArticles
         System.out.println("You can choose to insert the name of an attribute that can differ between products of this article " +
                 "(e.g., name: size)");
         this.insertPossibleAttributesNames();
-        System.out.print("Insert " + type + " article iva (default 0.22): ");
+        System.out.print(insert + type + " article iva (default 0.22): ");
         this.iva = scanner.nextLine();
     }
 

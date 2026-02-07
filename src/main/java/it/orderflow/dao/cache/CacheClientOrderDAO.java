@@ -24,7 +24,7 @@ public class CacheClientOrderDAO extends CacheGeneralDAO<ClientOrder> implements
     }
 
     private ClientOrder copy(ClientOrder clientOrder) {
-        return clientOrder.clone();
+        return clientOrder.copy();
     }
 
     private void saveNewClosedClientOrder(ClientOrder clientOrder) {

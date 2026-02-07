@@ -2,13 +2,14 @@ package it.orderflow.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Attributes implements Cloneable {
+public class Attributes {
 
-    private List<Attribute> attributes;
+    private List<Attribute> attributeList;
 
     public Attributes() {
-        this.setAttributes(new ArrayList<>());
+        this.setAttributeList(new ArrayList<>());
     }
 
     public Attributes(List<String> attrIds, List<String> attrVal) {
@@ -18,29 +19,29 @@ public class Attributes implements Cloneable {
         }
     }
 
-    public List<Attribute> getAttributes() {
-        return this.attributes;
+    public List<Attribute> getAttributeList() {
+        return this.attributeList;
     }
 
-    private void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
+    private void setAttributeList(List<Attribute> attributeList) {
+        this.attributeList = attributeList;
     }
 
     public void addAttributeId(String attrId) {
         if (this.getAttribute(attrId) == null) {
-            this.getAttributes().add(new Attribute(attrId));
+            this.getAttributeList().add(new Attribute(attrId));
         }
     }
 
     public void addAttributeIdAndValue(String attrId, String attrVal) {
         if (this.getAttribute(attrId) == null) {
-            this.getAttributes().add(new Attribute(attrId, attrVal));
+            this.getAttributeList().add(new Attribute(attrId, attrVal));
         }
     }
 
     public Attribute getAttribute(String attrId) {
-        for (int i = 0; i < this.getAttributes().size(); i++) {
-            Attribute attribute = this.getAttributes().get(i);
+        for (int i = 0; i < this.getAttributeList().size(); i++) {
+            Attribute attribute = this.getAttributeList().get(i);
             if (attribute.getId().equals(attrId)) {
                 return attribute;
             }
@@ -50,7 +51,7 @@ public class Attributes implements Cloneable {
 
     public List<String> getAttributesId() {
         List<String> result = new ArrayList<>();
-        for (Attribute attr : this.getAttributes()) {
+        for (Attribute attr : this.getAttributeList()) {
             result.add(attr.getId());
         }
         return result;
@@ -58,7 +59,7 @@ public class Attributes implements Cloneable {
 
     public List<String> getAttributesValues() {
         List<String> result = new ArrayList<>();
-        for (Attribute attr : this.getAttributes()) {
+        for (Attribute attr : this.getAttributeList()) {
             result.add(attr.getValue());
         }
         return result;
@@ -67,18 +68,15 @@ public class Attributes implements Cloneable {
     public void removeAttribute(String attrId) {
         Attribute attribute = this.getAttribute(attrId);
         if (attribute != null) {
-            this.getAttributes().remove(attribute);
+            this.getAttributeList().remove(attribute);
         }
     }
 
-    @Override
-    public Attributes clone() {
-        try {
-            Attributes clone = (Attributes) super.clone();
-            clone.attributes = this.attributes.stream().map(Attribute::clone).toList();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Attributes copy() {
+        Attributes attributes = new Attributes();
+        attributes.setAttributeList(this.getAttributeList().stream()
+                .map(Attribute::copy)
+                .collect(Collectors.toCollection(ArrayList::new)));
+        return attributes;
     }
 }

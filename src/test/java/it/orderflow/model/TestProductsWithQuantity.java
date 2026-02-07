@@ -39,7 +39,7 @@ class TestProductsWithQuantity {
     void testAddCheckAddProductPresent() {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq)));
 
         ProductWithQuantity pwq1 = new ProductWithQuantity(product1, 5);
         productsWithQuantity.add(pwq1);
@@ -51,12 +51,12 @@ class TestProductsWithQuantity {
     void testAddCheckAddDifferentProducts() {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq)));
 
         ProductWithQuantity pwq1 = new ProductWithQuantity(product2, 5);
         productsWithQuantity.add(pwq1);
 
-        assertEquals(2, productsWithQuantity.getProducts().size());
+        assertEquals(2, productsWithQuantity.getProductWithQuantityList().size());
     }
 
     @Test
@@ -64,14 +64,14 @@ class TestProductsWithQuantity {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
         ProductWithQuantity pwq1 = new ProductWithQuantity(product2, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq, pwq1)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq, pwq1)));
 
         ProductsWithQuantity tempProductsWithQuantity = new ProductsWithQuantity();
-        tempProductsWithQuantity.setProducts(new ArrayList<>(List.of(pwq, pwq1)));
+        tempProductsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq, pwq1)));
 
         productsWithQuantity.addProducts(tempProductsWithQuantity);
 
-        assertEquals(2, productsWithQuantity.getProducts().size());
+        assertEquals(2, productsWithQuantity.getProductWithQuantityList().size());
     }
 
     @Test
@@ -79,7 +79,7 @@ class TestProductsWithQuantity {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 1);
         ProductWithQuantity pwq1 = new ProductWithQuantity(product2, 1);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq, pwq1)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq, pwq1)));
 
         assertEquals(0, productsWithQuantity.generateTotal().compareTo(new BigDecimal("36.60")));
     }
@@ -91,14 +91,14 @@ class TestProductsWithQuantity {
 
         productsWithQuantity.remove(pwq);
 
-        assertEquals(0, productsWithQuantity.getProducts().size());
+        assertEquals(0, productsWithQuantity.getProductWithQuantityList().size());
     }
 
     @Test
     void testRemoveCheckProductPresent() {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq)));
 
         ProductWithQuantity pwq1 = new ProductWithQuantity(product1, 3);
         productsWithQuantity.remove(pwq1);
@@ -110,12 +110,12 @@ class TestProductsWithQuantity {
     void testRemoveCheckQuantityBiggerThanActual() {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq)));
 
         ProductWithQuantity pwq1 = new ProductWithQuantity(product1, 10);
         productsWithQuantity.remove(pwq1);
 
-        assertEquals(0, productsWithQuantity.getProducts().size());
+        assertEquals(0, productsWithQuantity.getProductWithQuantityList().size());
     }
 
     @Test
@@ -123,15 +123,15 @@ class TestProductsWithQuantity {
         ProductsWithQuantity productsWithQuantity = new ProductsWithQuantity();
         ProductWithQuantity pwq = new ProductWithQuantity(product1, 5);
         ProductWithQuantity pwq1 = new ProductWithQuantity(product2, 5);
-        productsWithQuantity.setProducts(new ArrayList<>(List.of(pwq, pwq1)));
+        productsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq, pwq1)));
 
         ProductsWithQuantity tempProductsWithQuantity = new ProductsWithQuantity();
         pwq = new ProductWithQuantity(product1, 2);
         pwq1 = new ProductWithQuantity(product2, 5);
-        tempProductsWithQuantity.setProducts(new ArrayList<>(List.of(pwq, pwq1)));
+        tempProductsWithQuantity.setProductWithQuantityList(new ArrayList<>(List.of(pwq, pwq1)));
 
         productsWithQuantity.removeProducts(tempProductsWithQuantity);
 
-        assertEquals(1, productsWithQuantity.getProducts().size());
+        assertEquals(1, productsWithQuantity.getProductWithQuantityList().size());
     }
 }

@@ -4,10 +4,7 @@ import it.orderflow.beans.SupplierBean;
 import it.orderflow.control.Statement;
 import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.SupplierDAO;
-import it.orderflow.exceptions.AlreadyInUseException;
-import it.orderflow.exceptions.EntityException;
-import it.orderflow.exceptions.EntityNotFoundException;
-import it.orderflow.exceptions.InvalidInputException;
+import it.orderflow.exceptions.*;
 import it.orderflow.model.Supplier;
 
 import java.math.BigDecimal;
@@ -34,7 +31,7 @@ public class ManageSuppliersLogicController extends TransactionSafeController {
         this.tempSupplierBean = tempSupplierBean;
     }
 
-    public List<SupplierBean> getSuppliersList() throws Exception {
+    public List<SupplierBean> getSuppliersList() throws PersistenceException {
         List<Supplier> suppliers = this.getSupplierDAO().loadAll();
 
         return suppliers.stream()
@@ -46,7 +43,8 @@ public class ManageSuppliersLogicController extends TransactionSafeController {
         this.setTempSupplierBean(supplierBean);
     }
 
-    public void saveNewSupplier(SupplierBean supplierBean) throws Exception {
+    public void saveNewSupplier(SupplierBean supplierBean)
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         Supplier targetSupplier = this.getSupplierDAO().loadSupplier(supplierBean.getEmail());
         if (targetSupplier == null) {
 
@@ -72,10 +70,11 @@ public class ManageSuppliersLogicController extends TransactionSafeController {
 
     }
 
-    public void changeSupplierInfo(SupplierBean supplierBean) throws Exception {
+    public void changeSupplierInfo(SupplierBean supplierBean)
+            throws EntityNotFoundException, PersistenceException {
         Supplier oldSupplier = this.getSupplierDAO().loadSupplier(this.getTempSupplierBean().getEmail());
         if (oldSupplier != null) {
-            Supplier newSupplier = oldSupplier.clone();
+            Supplier newSupplier = oldSupplier.copy();
 
             String name = supplierBean.getName();
             if (name != null) newSupplier.changeName(name);

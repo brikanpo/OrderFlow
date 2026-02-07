@@ -2,7 +2,7 @@ package it.orderflow.model;
 
 import java.util.UUID;
 
-public class Employee extends Contact implements Cloneable {
+public class Employee extends Contact {
 
     private String passwordHash;
     private UserRole userRole;
@@ -55,12 +55,7 @@ public class Employee extends Contact implements Cloneable {
         return password;
     }
 
-    @Override
-    public Employee clone() {
-        try {
-            return (Employee) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public Employee copy() {
+        return new Employee(this.getId(), this.getName(), this.getEmail(), this.getPhone(), this.getPasswordHash(), this.getUserRole());
     }
 }

@@ -23,7 +23,7 @@ public class CacheProductInStockDAO extends CacheGeneralDAO<ProductInStock> impl
     }
 
     private ProductInStock copy(ProductInStock product) {
-        return product.clone();
+        return product.copy();
     }
 
     private ProductInStock findProductInStock(UUID id) {

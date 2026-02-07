@@ -18,6 +18,7 @@ import java.util.UUID;
 public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> implements SupplierArticleDAO {
 
     private final Gson gson = new Gson();
+    private final String TABLE_NAME = "supplierArticle";
 
     private UUID getSupplierArticleId(SupplierArticle supplierArticle) {
         return supplierArticle.getId();
@@ -28,7 +29,7 @@ public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> impl
     }
 
     private SupplierArticle copy(SupplierArticle supplierArticle) {
-        return supplierArticle.clone();
+        return supplierArticle.copy();
     }
 
     private SupplierArticle findByIdFromCache(UUID id) {
@@ -40,12 +41,12 @@ public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> impl
     }
 
     private SupplierArticle findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("supplierArticle", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getSupplierArticle, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
     private SupplierArticle findByNameFromPersistence(String name) throws DatabaseException {
-        return this.findFromPersistence("supplierArticle", "name", name,
+        return this.findFromPersistence(this.TABLE_NAME, "name", name,
                 this::getSupplierArticle, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
@@ -103,19 +104,19 @@ public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> impl
 
     private void saveNewSupplierArticle(SupplierArticle supplierArticle) throws DatabaseException {
         this.saveNewEntity(supplierArticle, this::loadSupplierArticle, this::getSupplierArticleName, this::copy,
-                "INSERT INTO supplierArticle (id, name, category, description, articleAttributes, possibleAttributes, iva, supplierId) VALUES (?,?,?,?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, name, category, description, articleAttributes, possibleAttributes, iva, supplierId) VALUES (?,?,?,?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
     private void updateSupplierArticle(SupplierArticle supplierArticle) throws DatabaseException {
         this.updateEntity(supplierArticle, this::findSupplierArticle, this::getSupplierArticleId,
-                "UPDATE supplierArticle SET name = ?, category = ?, description = ?, articleAttributes = ?, possibleAttributes = ?, iva = ?, supplierId = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET name = ?, category = ?, description = ?, articleAttributes = ?, possibleAttributes = ?, iva = ?, supplierId = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
     private void deleteSupplierArticle(SupplierArticle supplierArticle) throws DatabaseException {
         this.deleteEntity(supplierArticle, this::findSupplierArticle, this::getSupplierArticleId,
-                "DELETE FROM supplierArticle WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
@@ -130,7 +131,7 @@ public class DBMSSupplierArticleDAO extends DBMSGeneralDAO<SupplierArticle> impl
 
     @Override
     public List<SupplierArticle> loadAll() throws DatabaseException {
-        return this.loadAll("supplierArticle", this::getSupplierArticle, EntityException.Entity.SUPPLIER_ARTICLE);
+        return this.loadAll(this.TABLE_NAME, this::getSupplierArticle, EntityException.Entity.SUPPLIER_ARTICLE);
     }
 
     @Override

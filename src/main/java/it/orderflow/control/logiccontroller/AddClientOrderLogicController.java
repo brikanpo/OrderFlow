@@ -4,6 +4,8 @@ import it.orderflow.beans.*;
 import it.orderflow.control.Statement;
 import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.*;
+import it.orderflow.exceptions.EmailNotSentException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.*;
 import it.orderflow.services.EmailSenderService;
 
@@ -93,7 +95,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.tempClientOrderBean = tempClientOrderBean;
     }
 
-    public List<ClientBean> getClientsList() throws Exception {
+    public List<ClientBean> getClientsList() throws PersistenceException {
         List<Client> clients = this.getClientDAO().loadAll();
 
         return clients.stream()
@@ -105,7 +107,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.getTempClientOrderBean().setClientBean(selectedClient);
     }
 
-    public List<ArticleBean> getClientArticlesList() throws Exception {
+    public List<ArticleBean> getClientArticlesList() throws PersistenceException {
         List<ClientArticle> clientArticles = this.getClientArticleDAO().loadAll();
 
         return clientArticles.stream()
@@ -118,7 +120,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.setClientArticleBeanList(clientArticles);
     }
 
-    public List<ProductBean> getClientProductsListByArticleName() throws Exception {
+    public List<ProductBean> getClientProductsListByArticleName() throws PersistenceException {
         List<ProductInStock> productInStocks = new ArrayList<>();
         for (ArticleBean clientArticleBean : this.getClientArticleBeanList()) {
             List<ProductInStock> prods = this.getProductInStockDAO().loadByArticleName(clientArticleBean.getName());
@@ -146,14 +148,14 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.setNumberOfPastOrders(numberOfPastOrders);
     }
 
-    public List<ProductBean> getPastClientOrdersProductsList() throws Exception {
+    public List<ProductBean> getPastClientOrdersProductsList() throws PersistenceException {
         List<ClientOrder> closedClientOrders = this.getClientOrderDAO().loadByStateAndClientId(OrderState.CLOSED, this.getTempClientOrderBean().getClientBean().getId());
 
         ClientOrders pastClientOrders = new ClientOrders(closedClientOrders).getPastOrders(this.getNumberOfPastOrders());
 
         ProductsWithQuantity productsWithQuantity = pastClientOrders.getAllProductsOrdered();
 
-        return productsWithQuantity.getProducts().stream()
+        return productsWithQuantity.getProductWithQuantityList().stream()
                 .map(productWithQuantity -> new ProductBean(productWithQuantity.getProduct()))
                 .toList();
     }
@@ -162,7 +164,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.getTempClientOrderBean().setProductsOrdered(productsWithQuantity);
     }
 
-    public List<ProductWithQuantityBean> getUnavailableProducts() throws Exception {
+    public List<ProductWithQuantityBean> getUnavailableProducts() throws PersistenceException {
         List<ProductWithQuantityBean> result = new ArrayList<>();
         for (ProductWithQuantityBean productWithQuantityBean : this.getTempClientOrderBean().getProductsOrdered()) {
             ProductInStock targetProductInStock = this.getProductInStockDAO().loadProductInStock(productWithQuantityBean.getProductBean().getCode());
@@ -176,7 +178,8 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         return result;
     }
 
-    public void removeSelectedProductsWithQuantity(List<ProductWithQuantityBean> productsToBeRemovedBeanList) throws Exception {
+    public void removeSelectedProductsWithQuantity(List<ProductWithQuantityBean> productsToBeRemovedBeanList)
+            throws PersistenceException {
         List<ProductWithQuantityBean> productsOrderedBeanList = this.getTempClientOrderBean().getProductsOrdered();
 
         ProductsWithQuantity productsOrdered = new ProductsWithQuantity();
@@ -194,14 +197,14 @@ public class AddClientOrderLogicController extends TransactionSafeController {
 
         productsOrdered.removeProducts(productsToBeRemoved);
 
-        List<ProductWithQuantityBean> productWithQuantityBeanList = productsOrdered.getProducts().stream()
+        List<ProductWithQuantityBean> productWithQuantityBeanList = productsOrdered.getProductWithQuantityList().stream()
                 .map(ProductWithQuantityBean::new)
                 .toList();
 
         this.getTempClientOrderBean().setProductsOrdered(productWithQuantityBeanList);
     }
 
-    public void saveNewClientOrder() throws Exception {
+    public void saveNewClientOrder() throws EmailNotSentException, PersistenceException {
         ProductsWithQuantity productsOrdered = new ProductsWithQuantity();
         for (ProductWithQuantityBean productWithQuantityBean : this.getTempClientOrderBean().getProductsOrdered()) {
             productsOrdered.add(new ProductWithQuantity(this.getProductInStockDAO().loadProductInStock(productWithQuantityBean.getProductBean().getCode()),
@@ -214,7 +217,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
 
         //set the quantity of products in inventory as ordered
         List<ProductInStock> productsInStock = new ArrayList<>();
-        for (ProductWithQuantity productWithQuantity : clientOrder.getProductsOrdered().getProducts()) {
+        for (ProductWithQuantity productWithQuantity : clientOrder.getProductsOrdered().getProductWithQuantityList()) {
             productsInStock.add(this.getProductInStockDAO().loadProductInStock(productWithQuantity.getCode()));
         }
         Inventory inventory = new Inventory(productsInStock);
@@ -224,7 +227,7 @@ public class AddClientOrderLogicController extends TransactionSafeController {
         this.addStatement(this.getClientOrderDAO(), new Statement<>(List.of(clientOrder), Statement.Type.SAVE));
         for (int i = 0; i < productsInStock.size(); i++) {
             ProductInStock oldVersion = productsInStock.get(i);
-            ProductInStock newVersion = inventory.getInventory().get(i);
+            ProductInStock newVersion = inventory.getProductInStockList().get(i);
             this.addStatement(this.getProductInStockDAO(), new Statement<>(List.of(newVersion, oldVersion), Statement.Type.UPDATE));
         }
         this.endOperation();

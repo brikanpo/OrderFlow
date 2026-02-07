@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class DBMSGeneralDAO<T> {
 
@@ -74,6 +75,17 @@ public class DBMSGeneralDAO<T> {
         }
     }
 
+    private String buildSelectStatement(List<String> tableNameAndAttributeNames) {
+        String result = "SELECT * FROM " + tableNameAndAttributeNames.getFirst();
+        if (tableNameAndAttributeNames.size() == 1) {
+            return result + ";";
+        } else if (tableNameAndAttributeNames.size() == 2) {
+            return result + " WHERE " + tableNameAndAttributeNames.get(1) + " = ?" + ";";
+        } else if (tableNameAndAttributeNames.size() == 3) {
+            return result + " AND " + tableNameAndAttributeNames.get(2) + " = ?;";
+        } else throw new UnsupportedOperationException();
+    }
+
     protected <S> T findFromPersistence(String tableName,
                                         String keyName, S key,
                                         ThrowingFunction<ResultSet, T, DatabaseException> getEntityMethod,
@@ -86,7 +98,7 @@ public class DBMSGeneralDAO<T> {
         T result;
 
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE " + keyName + " = ?;");
+            pstmt = conn.prepareStatement(this.buildSelectStatement(List.of(tableName, keyName)));
 
             this.setPreparedStatement(pstmt, 1, key);
 
@@ -109,6 +121,7 @@ public class DBMSGeneralDAO<T> {
                 if (conn != null)
                     this.connectionPool.releaseConnection(conn);
             } catch (SQLException ignore) {
+                //Empty because if close() fails there is nothing to be done about it
             }
         }
     }
@@ -125,7 +138,7 @@ public class DBMSGeneralDAO<T> {
         List<T> result;
 
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE " + attributeName + " = ?;");
+            pstmt = conn.prepareStatement(this.buildSelectStatement(List.of(tableName, attributeName)));
 
             this.setPreparedStatement(pstmt, 1, attributeToMatch);
 
@@ -148,6 +161,7 @@ public class DBMSGeneralDAO<T> {
                 if (conn != null)
                     this.connectionPool.releaseConnection(conn);
             } catch (SQLException ignore) {
+                //Empty because if close() fails there is nothing to be done about it
             }
         }
     }
@@ -165,7 +179,7 @@ public class DBMSGeneralDAO<T> {
         List<T> result;
 
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM " + tableName + " WHERE " + attributeName1 + " = ? AND " + attributeName2 + " = ?;");
+            pstmt = conn.prepareStatement(this.buildSelectStatement(List.of(tableName, attributeName1, attributeName2)));
 
             this.setPreparedStatement(pstmt, 1, attributeToMatch1);
             this.setPreparedStatement(pstmt, 2, attributeToMatch2);
@@ -189,6 +203,7 @@ public class DBMSGeneralDAO<T> {
                 if (conn != null)
                     this.connectionPool.releaseConnection(conn);
             } catch (SQLException ignore) {
+                //Empty because if close() fails there is nothing to be done about it
             }
         }
     }
@@ -276,7 +291,7 @@ public class DBMSGeneralDAO<T> {
     protected <S> void saveNewEntity(T entity,
                                      ThrowingFunction<S, T, DatabaseException> loadEntityMethod,
                                      Function<T, S> getEntityKeyMethod,
-                                     Function<T, T> copyEntityMethod,
+                                     UnaryOperator<T> copyEntityMethod,
                                      String statement,
                                      ThrowingTriConsumer<PreparedStatement, Statement.Type, T, DatabaseException> loadPreparedStatementMethod,
                                      EntityException.Entity entityType)
@@ -313,6 +328,7 @@ public class DBMSGeneralDAO<T> {
                     if (conn != null)
                         this.connectionPool.releaseConnection(conn);
                 } catch (SQLException ignore) {
+                    //Empty because if close() fails there is nothing to be done about it
                 }
             }
         }
@@ -356,6 +372,7 @@ public class DBMSGeneralDAO<T> {
                     if (conn != null)
                         this.connectionPool.releaseConnection(conn);
                 } catch (SQLException ignore) {
+                    //Empty because if close() fails there is nothing to be done about it
                 }
             }
         }
@@ -399,6 +416,7 @@ public class DBMSGeneralDAO<T> {
                     if (conn != null)
                         this.connectionPool.releaseConnection(conn);
                 } catch (SQLException ignore) {
+                    //Empty because if close() fails there is nothing to be done about it
                 }
             }
         }
@@ -418,7 +436,7 @@ public class DBMSGeneralDAO<T> {
             stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_READ_ONLY);
 
-            ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName + ";");
+            ResultSet rs = stmt.executeQuery(this.buildSelectStatement(List.of(tableName)));
 
             if (rs.first()) {
                 do {
@@ -440,6 +458,7 @@ public class DBMSGeneralDAO<T> {
                 if (conn != null)
                     this.connectionPool.releaseConnection(conn);
             } catch (SQLException ignore) {
+                //Empty because if close() fails there is nothing to be done about it
             }
         }
     }
@@ -471,6 +490,7 @@ public class DBMSGeneralDAO<T> {
                 if (conn != null)
                     this.connectionPool.releaseConnection(conn);
             } catch (SQLException ignore) {
+                //Empty because if close() fails there is nothing to be done about it
             }
         }
     }

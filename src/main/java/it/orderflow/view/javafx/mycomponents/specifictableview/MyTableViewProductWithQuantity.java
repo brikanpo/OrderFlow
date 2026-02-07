@@ -46,30 +46,7 @@ public class MyTableViewProductWithQuantity extends TableView<ProductWithQuantit
 
         TableColumn<ProductWithQuantityBean, Integer> tableColumnQuantity = new TableColumn<>("Quantity");
         if (editable) {
-            tableColumnQuantity.setCellFactory(column -> new TableCell<>() {
-                private final Spinner<Integer> spinner = new Spinner<>(0, 100000, 0);
-
-                {
-                    spinner.valueProperty().addListener((obs, oldVal, newVal) -> {
-                        if (getTableRow() != null && getTableRow().getItem() != null) {
-                            getTableRow().getItem().setQuantity(newVal);
-                        }
-                    });
-                    spinner.setEditable(true);
-                    spinner.setMaxWidth(80);
-                }
-
-                @Override
-                protected void updateItem(Integer item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        spinner.getValueFactory().setValue(item);
-                        setGraphic(spinner);
-                    }
-                }
-            });
+            tableColumnQuantity.setCellFactory(column -> new SpinnerTableCell());
         }
         tableColumnQuantity.setCellValueFactory(new PropertyValueFactory<>("quantity"));
 
@@ -78,5 +55,32 @@ public class MyTableViewProductWithQuantity extends TableView<ProductWithQuantit
         this.getColumns().add(tableColumnPrice);
         this.getColumns().add(tableColumnIva);
         this.getColumns().add(tableColumnQuantity);
+    }
+
+    private static class SpinnerTableCell extends TableCell<ProductWithQuantityBean, Integer> {
+        private final Spinner<Integer> spinner;
+
+        public SpinnerTableCell() {
+            this.spinner = new Spinner<>(0, 100000, 0);
+            this.spinner.setEditable(true);
+            this.spinner.setMaxWidth(80);
+
+            this.spinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+                if (getTableRow() != null && getTableRow().getItem() != null) {
+                    getTableRow().getItem().setQuantity(newVal);
+                }
+            });
+        }
+
+        @Override
+        protected void updateItem(Integer item, boolean empty) {
+            super.updateItem(item, empty);
+            if (empty || item == null) {
+                setGraphic(null);
+            } else {
+                spinner.getValueFactory().setValue(item);
+                setGraphic(spinner);
+            }
+        }
     }
 }

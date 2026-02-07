@@ -47,6 +47,6 @@ public class MockClientDAO implements ClientDAO {
 
     @Override
     public void keepIntegrity(List<Statement<Client>> statements) {
-
+        //is not called because save, update and delete do not raise exceptions
     }
 }

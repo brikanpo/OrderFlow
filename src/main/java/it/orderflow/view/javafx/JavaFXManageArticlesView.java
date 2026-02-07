@@ -126,17 +126,7 @@ public class JavaFXManageArticlesView extends JavaFXRootView implements ManageAr
         });
     }
 
-    @Override
-    public ArticleBean getSupplierArticleBean() throws InvalidInputException {
-        ArticleBean supplierArticleBean = new ArticleBean();
-
-        if (!this.nameField.getText().isBlank()) supplierArticleBean.setName(this.nameField.getText());
-
-        if (!this.categoryField.getText().isBlank()) supplierArticleBean.setCategory(this.categoryField.getText());
-
-        if (!this.descriptionField.getText().isBlank())
-            supplierArticleBean.setDescription(this.descriptionField.getText());
-
+    private void setArticleAttributes(ArticleBean articleBean) {
         if (!this.articleAttributesContainer.getNames().isEmpty()) {
 
             List<String> attrNames = this.articleAttributesContainer.getNames();
@@ -149,9 +139,11 @@ public class JavaFXManageArticlesView extends JavaFXRootView implements ManageAr
                     attributes.addAttributeIdAndValue(attrNames.get(i), attrValue.get(i));
                 }
             }
-            supplierArticleBean.setArticleAttributes(attributes);
+            articleBean.setArticleAttributes(attributes);
         }
+    }
 
+    private void setArticlePossibleAttributes(ArticleBean articleBean) {
         if (!this.possibleAttributesContainer.getNames().isEmpty()) {
 
             List<String> attrNames = this.possibleAttributesContainer.getNames();
@@ -163,8 +155,24 @@ public class JavaFXManageArticlesView extends JavaFXRootView implements ManageAr
                     attributes.addAttributeId(attrName);
                 }
             }
-            supplierArticleBean.setPossibleAttributes(attributes);
+            articleBean.setPossibleAttributes(attributes);
         }
+    }
+
+    @Override
+    public ArticleBean getSupplierArticleBean() throws InvalidInputException {
+        ArticleBean supplierArticleBean = new ArticleBean();
+
+        if (!this.nameField.getText().isBlank()) supplierArticleBean.setName(this.nameField.getText());
+
+        if (!this.categoryField.getText().isBlank()) supplierArticleBean.setCategory(this.categoryField.getText());
+
+        if (!this.descriptionField.getText().isBlank())
+            supplierArticleBean.setDescription(this.descriptionField.getText());
+
+        this.setArticleAttributes(supplierArticleBean);
+
+        this.setArticlePossibleAttributes(supplierArticleBean);
 
         if (!this.ivaField.getText().isBlank()) {
             try {
@@ -189,34 +197,9 @@ public class JavaFXManageArticlesView extends JavaFXRootView implements ManageAr
         if (!this.descriptionField.getText().isBlank())
             clientArticleBean.setDescription(this.descriptionField.getText());
 
-        if (!this.articleAttributesContainer.getNames().isEmpty()) {
+        this.setArticleAttributes(clientArticleBean);
 
-            List<String> attrNames = this.articleAttributesContainer.getNames();
-            List<String> attrValue = this.articleAttributesContainer.getValues();
-
-            Attributes attributes = new Attributes();
-
-            for (int i = 0; i < attrNames.size(); i++) {
-                if (!attrNames.get(i).isBlank() && !attrValue.get(i).isBlank()) {
-                    attributes.addAttributeIdAndValue(attrNames.get(i), attrValue.get(i));
-                }
-            }
-            clientArticleBean.setArticleAttributes(attributes);
-        }
-
-        if (!this.possibleAttributesContainer.getNames().isEmpty()) {
-
-            List<String> attrNames = this.possibleAttributesContainer.getNames();
-
-            Attributes attributes = new Attributes();
-
-            for (String attrName : attrNames) {
-                if (!attrName.isBlank()) {
-                    attributes.addAttributeId(attrName);
-                }
-            }
-            clientArticleBean.setPossibleAttributes(attributes);
-        }
+        this.setArticlePossibleAttributes(clientArticleBean);
 
         if (!this.ivaField.getText().isBlank()) {
             try {

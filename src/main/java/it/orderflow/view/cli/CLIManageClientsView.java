@@ -81,18 +81,18 @@ public class CLIManageClientsView extends CLIRootView implements ManageClientsVi
         System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-7s |%n",
                 "Name", "Email", "Phone", "Address", "CAP", "City", "Province");
 
-        String phone = clientBean.getPhone();
-        if (phone == null) phone = "";
+        String tempPhone = clientBean.getPhone();
+        if (tempPhone == null) tempPhone = "";
 
         AddressBean ab = clientBean.getAddressBean();
 
         if (ab != null) {
             System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
-                    clientBean.getName(), clientBean.getEmail(), phone,
-                    ab.getAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
+                    clientBean.getName(), clientBean.getEmail(), tempPhone,
+                    ab.getStreetAddress(), ab.getCap(), ab.getCity(), ab.getProvince());
         } else {
             System.out.printf("%-25s | %-35s | %-10s | %-50s | %-6s | %-30s | %-8s |%n",
-                    clientBean.getName(), clientBean.getEmail(), phone, "", "", "", "");
+                    clientBean.getName(), clientBean.getEmail(), tempPhone, "", "", "", "");
         }
 
         System.out.println("If you don't want to change something leave the field blank.");
@@ -111,7 +111,7 @@ public class CLIManageClientsView extends CLIRootView implements ManageClientsVi
 
         if (!this.address.isBlank() && !this.cap.isBlank() && !this.city.isBlank() && !this.province.isBlank()) {
             AddressBean addressBean = new AddressBean();
-            addressBean.setAddress(this.address);
+            addressBean.setStreetAddress(this.address);
             addressBean.setCap(this.cap);
             addressBean.setCity(this.city);
             addressBean.setProvince(this.province);

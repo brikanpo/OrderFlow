@@ -10,7 +10,7 @@ public class ClientOrders {
     private final List<ClientOrder> orders;
 
     public ClientOrders(List<ClientOrder> orders) {
-        this.orders = orders.stream().map(ClientOrder::clone).collect(Collectors.toCollection(ArrayList::new));
+        this.orders = orders.stream().map(ClientOrder::copy).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public List<ClientOrder> getOrders() {

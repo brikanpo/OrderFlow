@@ -27,10 +27,6 @@ public class Contact {
         return this.id;
     }
 
-    private void setId(UUID id) {
-        this.id = id;
-    }
-
     public String getName() {
         return this.name;
     }

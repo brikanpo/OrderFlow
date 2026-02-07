@@ -13,7 +13,7 @@ public class ConfigManager {
         try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(in);
         } catch (IOException e) {
-            throw new IllegalArgumentException("File config.properties not found");
+            throw new IllegalStateException("File config.properties not found", e);
         }
     }
 

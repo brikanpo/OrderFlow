@@ -7,7 +7,10 @@ import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.ClientArticleDAO;
 import it.orderflow.dao.SupplierArticleDAO;
 import it.orderflow.dao.SupplierDAO;
-import it.orderflow.exceptions.*;
+import it.orderflow.exceptions.AlreadyInUseException;
+import it.orderflow.exceptions.EntityException;
+import it.orderflow.exceptions.InvalidInputException;
+import it.orderflow.exceptions.PersistenceException;
 import it.orderflow.model.*;
 
 import java.math.BigDecimal;
@@ -59,7 +62,7 @@ public class ManageArticlesLogicController extends TransactionSafeController {
         this.tempClientArticleBean = tempClientArticleBean;
     }
 
-    public List<SupplierBean> getSuppliersList() throws DatabaseException {
+    public List<SupplierBean> getSuppliersList() throws PersistenceException {
         List<Supplier> suppliers = this.getSupplierDAO().loadAll();
 
         return suppliers.stream()
@@ -72,7 +75,7 @@ public class ManageArticlesLogicController extends TransactionSafeController {
     }
 
     public void saveNewSupplierArticle(ArticleBean supplierArticleBean)
-            throws AlreadyInUseException, CacheIntegrityException, DatabaseException, InvalidInputException {
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         SupplierArticle targetSupplierArticle = this.getSupplierArticleDAO().loadSupplierArticle(supplierArticleBean.getName());
         if (targetSupplierArticle == null) {
 
@@ -96,7 +99,7 @@ public class ManageArticlesLogicController extends TransactionSafeController {
             throw new AlreadyInUseException(EntityException.Entity.SUPPLIER_ARTICLE, AlreadyInUseException.Param.NAME);
     }
 
-    public List<ArticleBean> getSupplierArticlesList() throws DatabaseException {
+    public List<ArticleBean> getSupplierArticlesList() throws PersistenceException {
         List<SupplierArticle> supplierArticles = this.getSupplierArticleDAO().loadAll();
 
         return supplierArticles.stream()
@@ -109,7 +112,7 @@ public class ManageArticlesLogicController extends TransactionSafeController {
     }
 
     public void saveNewClientArticle(ArticleBean clientArticleBean)
-            throws AlreadyInUseException, CacheIntegrityException, DatabaseException, InvalidInputException {
+            throws AlreadyInUseException, InvalidInputException, PersistenceException {
         ClientArticle targetClientArticle = this.getClientArticleDAO().loadClientArticle(clientArticleBean.getName());
         if (targetClientArticle == null) {
 

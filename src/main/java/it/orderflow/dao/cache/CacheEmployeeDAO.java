@@ -24,7 +24,7 @@ public class CacheEmployeeDAO extends CacheGeneralDAO<Employee> implements Emplo
     }
 
     private Employee copy(Employee employee) {
-        return employee.clone();
+        return employee.copy();
     }
 
     private Employee findEmployee(UUID id) {

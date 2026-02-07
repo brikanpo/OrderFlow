@@ -48,7 +48,7 @@ class TestClientOrders {
     void testGetAllProductsOrdered() {
         ProductsWithQuantity pwq = clientOrders.getAllProductsOrdered();
 
-        assertEquals(1, pwq.getProducts().size());
+        assertEquals(1, pwq.getProductWithQuantityList().size());
     }
 
     @Test

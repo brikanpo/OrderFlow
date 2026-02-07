@@ -23,6 +23,7 @@ import java.util.UUID;
 public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implements SupplierOrderDAO {
 
     private final Gson gson = new Gson();
+    private final String TABLE_NAME = "supplierOrder";
 
     private final DBMSSupplierDAO supplierDAO;
     private final DBMSProductDAO productDAO;
@@ -42,7 +43,7 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
     }
 
     private SupplierOrder copy(SupplierOrder supplierOrder) {
-        return supplierOrder.clone();
+        return supplierOrder.copy();
     }
 
     private SupplierOrder findByIdFromCache(UUID id) {
@@ -54,12 +55,12 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
     }
 
     private SupplierOrder findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence("supplierOrder", "id", id,
+        return this.findFromPersistence(this.TABLE_NAME, "id", id,
                 this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private List<SupplierOrder> findByStateFromPersistence(OrderState state) throws DatabaseException {
-        return this.findMatchesFromPersistence("supplierOrder", "orderState", state.toString(),
+        return this.findMatchesFromPersistence(this.TABLE_NAME, "orderState", state.toString(),
                 this::getSupplierOrderList, EntityException.Entity.SUPPLIER_ORDER);
     }
 
@@ -98,7 +99,7 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
 
     private Map<UUID, Integer> toFormatForDB(ProductsWithQuantity productsWithQuantity) {
         Map<UUID, Integer> result = new HashMap<>();
-        for (ProductWithQuantity pwq : productsWithQuantity.getProducts()) {
+        for (ProductWithQuantity pwq : productsWithQuantity.getProductWithQuantityList()) {
             result.put(pwq.getProduct().getId(), pwq.getQuantity());
         }
         return result;
@@ -133,19 +134,19 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
 
     private void saveNewSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.saveNewEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId, this::copy,
-                "INSERT INTO supplierOrder (id, registrationDate, productsOrdered, orderState, supplierId) VALUES (?,?,?,?,?);",
+                "INSERT INTO " + this.TABLE_NAME + " (id, registrationDate, productsOrdered, orderState, supplierId) VALUES (?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private void updateSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.updateEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId,
-                "UPDATE supplierOrder SET registrationDate = ?, productsOrdered = ?, orderState = ?, supplierId = ?, deliveryDate = ?, warehouseWorkerId = ? WHERE id = ?;",
+                "UPDATE " + this.TABLE_NAME + " SET registrationDate = ?, productsOrdered = ?, orderState = ?, supplierId = ?, deliveryDate = ?, warehouseWorkerId = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     private void deleteSupplierOrder(SupplierOrder supplierOrder) throws DatabaseException {
         this.deleteEntity(supplierOrder, this::loadSupplierOrder, this::getSupplierOrderId,
-                "DELETE FROM supplierOrder WHERE id = ?;",
+                "DELETE FROM " + this.TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.SUPPLIER_ORDER);
     }
 
@@ -155,13 +156,13 @@ public class DBMSSupplierOrderDAO extends DBMSGeneralDAO<SupplierOrder> implemen
     }
 
     @Override
-    public List<SupplierOrder> loadByState(OrderState state) throws Exception {
+    public List<SupplierOrder> loadByState(OrderState state) throws DatabaseException {
         return this.findMultipleResults(state, this::getSupplierOrderId, this::findByStateFromCache, this::findByStateFromPersistence);
     }
 
     @Override
     public List<SupplierOrder> loadAll() throws DatabaseException {
-        return this.loadAll("supplierOrder", this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
+        return this.loadAll(this.TABLE_NAME, this::getSupplierOrder, EntityException.Entity.SUPPLIER_ORDER);
     }
 
     @Override

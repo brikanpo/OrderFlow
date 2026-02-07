@@ -100,11 +100,11 @@ public class CLIManagePersonalInfoView extends CLIRootView implements ManagePers
 
     @Override
     public EmployeeBean getEmployeeBean() throws InvalidInputException {
-        EmployeeBean employeeBean = new EmployeeBean();
-        employeeBean.setName(this.name);
-        employeeBean.setEmail(this.email);
-        employeeBean.setPhone(this.phone);
-        return employeeBean;
+        EmployeeBean tempEmployeeBean = new EmployeeBean();
+        tempEmployeeBean.setName(this.name);
+        tempEmployeeBean.setEmail(this.email);
+        tempEmployeeBean.setPhone(this.phone);
+        return tempEmployeeBean;
     }
 
     @Override

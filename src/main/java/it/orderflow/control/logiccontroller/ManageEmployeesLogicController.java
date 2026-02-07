@@ -4,9 +4,7 @@ import it.orderflow.beans.EmployeeBean;
 import it.orderflow.control.Statement;
 import it.orderflow.control.TransactionSafeController;
 import it.orderflow.dao.EmployeeDAO;
-import it.orderflow.exceptions.AlreadyInUseException;
-import it.orderflow.exceptions.EntityException;
-import it.orderflow.exceptions.EntityNotFoundException;
+import it.orderflow.exceptions.*;
 import it.orderflow.model.Employee;
 import it.orderflow.services.EmailSenderService;
 
@@ -25,7 +23,7 @@ public class ManageEmployeesLogicController extends TransactionSafeController {
         return this.employeeDAO;
     }
 
-    public List<EmployeeBean> getEmployeesList() throws Exception {
+    public List<EmployeeBean> getEmployeesList() throws PersistenceException {
         List<Employee> employees = this.getEmployeeDAO().loadAll();
 
         List<EmployeeBean> employeeBeans = new ArrayList<>();
@@ -36,7 +34,8 @@ public class ManageEmployeesLogicController extends TransactionSafeController {
         return employeeBeans;
     }
 
-    public void saveNewEmployee(EmployeeBean employeeBean) throws Exception {
+    public void saveNewEmployee(EmployeeBean employeeBean)
+            throws AlreadyInUseException, EmailNotSentException, PersistenceException {
         Employee targetEmployee = this.getEmployeeDAO().loadEmployee(employeeBean.getEmail());
         if (targetEmployee == null) {
             Employee tempEmployee = new Employee(employeeBean.getEmail(), employeeBean.getEmail());
@@ -54,10 +53,11 @@ public class ManageEmployeesLogicController extends TransactionSafeController {
         } else throw new AlreadyInUseException(EntityException.Entity.EMPLOYEE, AlreadyInUseException.Param.EMAIL);
     }
 
-    public void changeEmployeeRole(EmployeeBean employeeBean) throws Exception {
+    public void changeEmployeeRole(EmployeeBean employeeBean)
+            throws EmailNotSentException, EntityNotFoundException, PersistenceException {
         Employee oldEmployee = this.getEmployeeDAO().loadEmployee(employeeBean.getEmail());
         if (oldEmployee != null) {
-            Employee newEmployee = oldEmployee.clone();
+            Employee newEmployee = oldEmployee.copy();
             newEmployee.changeRole(employeeBean.getUserRole());
 
             this.startOperation();

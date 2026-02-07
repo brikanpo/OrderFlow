@@ -29,12 +29,12 @@ class TestInventory {
     @Test
     void testConstructorCheckCopy() {
         List<ProductInStock> list = new ArrayList<>();
-        ProductInStock p1 = new ProductInStock(new Product(UUID.randomUUID(), "code3", null, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
+        ProductInStock p = new ProductInStock(new Product(UUID.randomUUID(), "code3", null, new Attributes(List.of("Color"), List.of("Red")), new BigDecimal("20.00")),
                 10, 5, 20, 0);
-        list.add(p1);
+        list.add(p);
         Inventory inv = new Inventory(list);
 
-        assertNotSame(p1, inv.get("code3"));
+        assertNotSame(p, inv.get("code3"));
     }
 
     @Test
@@ -61,7 +61,7 @@ class TestInventory {
     void testGetProductsToOrder() {
         ProductsWithQuantity toOrder = inventory.getProductsToOrder();
 
-        assertEquals(1, toOrder.getProducts().size());
+        assertEquals(1, toOrder.getProductWithQuantityList().size());
     }
 
     @Test

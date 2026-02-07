@@ -2,7 +2,7 @@ package it.orderflow.model;
 
 import java.math.BigDecimal;
 
-public class ProductWithQuantity implements Cloneable {
+public class ProductWithQuantity {
 
     private Product product;
     private int quantity;
@@ -48,14 +48,7 @@ public class ProductWithQuantity implements Cloneable {
         this.setQuantity(Math.max(this.getQuantity() - quantity, 0));
     }
 
-    @Override
-    public ProductWithQuantity clone() {
-        try {
-            ProductWithQuantity clone = (ProductWithQuantity) super.clone();
-            clone.product = this.product.clone();
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new AssertionError();
-        }
+    public ProductWithQuantity copy() {
+        return new ProductWithQuantity(this.getProduct().copy(), this.getQuantity());
     }
 }

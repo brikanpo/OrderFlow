@@ -32,42 +32,42 @@ public class MyTableViewClient extends TableView<ClientBean> {
 
         TableColumn<ClientBean, String> tableColumnAddress = new TableColumn<>("Address");
 
-        TableColumn<ClientBean, String> tableColumn_Address = new TableColumn<>("Address");
-        tableColumn_Address.setCellValueFactory(data -> {
+        TableColumn<ClientBean, String> tableColumnStreetAddress = new TableColumn<>("Street Address");
+        tableColumnStreetAddress.setCellValueFactory(data -> {
             ClientBean cb = data.getValue();
             if (cb.getAddressBean() != null) {
-                return new SimpleStringProperty(cb.getAddressBean().getAddress());
+                return new SimpleStringProperty(cb.getAddressBean().getStreetAddress());
             } else return new SimpleStringProperty("");
         });
 
-        TableColumn<ClientBean, String> tableColumn_Cap = new TableColumn<>("CAP");
-        tableColumn_Cap.setCellValueFactory(data -> {
+        TableColumn<ClientBean, String> tableColumnCap = new TableColumn<>("CAP");
+        tableColumnCap.setCellValueFactory(data -> {
             ClientBean cb = data.getValue();
             if (cb.getAddressBean() != null) {
                 return new SimpleStringProperty(cb.getAddressBean().getCap());
             } else return new SimpleStringProperty("");
         });
 
-        TableColumn<ClientBean, String> tableColumn_City = new TableColumn<>("City");
-        tableColumn_City.setCellValueFactory(data -> {
+        TableColumn<ClientBean, String> tableColumnCity = new TableColumn<>("City");
+        tableColumnCity.setCellValueFactory(data -> {
             ClientBean cb = data.getValue();
             if (cb.getAddressBean() != null) {
                 return new SimpleStringProperty(cb.getAddressBean().getCity());
             } else return new SimpleStringProperty("");
         });
 
-        TableColumn<ClientBean, String> tableColumn_Province = new TableColumn<>("Province");
-        tableColumn_Province.setCellValueFactory(data -> {
+        TableColumn<ClientBean, String> tableColumnProvince = new TableColumn<>("Province");
+        tableColumnProvince.setCellValueFactory(data -> {
             ClientBean cb = data.getValue();
             if (cb.getAddressBean() != null) {
                 return new SimpleStringProperty(cb.getAddressBean().getProvince());
             } else return new SimpleStringProperty("");
         });
 
-        tableColumnAddress.getColumns().add(tableColumn_Address);
-        tableColumnAddress.getColumns().add(tableColumn_Cap);
-        tableColumnAddress.getColumns().add(tableColumn_City);
-        tableColumnAddress.getColumns().add(tableColumn_Province);
+        tableColumnAddress.getColumns().add(tableColumnStreetAddress);
+        tableColumnAddress.getColumns().add(tableColumnCap);
+        tableColumnAddress.getColumns().add(tableColumnCity);
+        tableColumnAddress.getColumns().add(tableColumnProvince);
 
         this.getColumns().add(tableColumnName);
         this.getColumns().add(tableColumnEmail);
