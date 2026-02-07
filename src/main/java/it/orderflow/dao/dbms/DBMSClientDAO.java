@@ -17,7 +17,7 @@ import java.util.UUID;
 public class DBMSClientDAO extends DBMSGeneralDAO<Client> implements ClientDAO {
 
     private final Gson gson = new Gson();
-    private final String tableName = "client";
+    private static final String TABLE_NAME = "client";
 
     private UUID getClientId(Client client) {
         return client.getId();
@@ -40,12 +40,12 @@ public class DBMSClientDAO extends DBMSGeneralDAO<Client> implements ClientDAO {
     }
 
     private Client findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence(this.tableName, "id", id,
+        return this.findFromPersistence(TABLE_NAME, "id", id,
                 this::getClient, EntityException.Entity.CLIENT);
     }
 
     private Client findByEmailFromPersistence(String email) throws DatabaseException {
-        return this.findFromPersistence(this.tableName, "email", email,
+        return this.findFromPersistence(TABLE_NAME, "email", email,
                 this::getClient, EntityException.Entity.CLIENT);
     }
 
@@ -92,19 +92,19 @@ public class DBMSClientDAO extends DBMSGeneralDAO<Client> implements ClientDAO {
 
     private void saveNewClient(Client client) throws DatabaseException {
         this.saveNewEntity(client, this::loadClient, this::getClientEmail, this::copy,
-                "INSERT INTO " + this.tableName + " (id, name, email, phone, address) VALUES (?,?,?,?,?);",
+                "INSERT INTO " + TABLE_NAME + " (id, name, email, phone, address) VALUES (?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT);
     }
 
     private void updateClient(Client client) throws DatabaseException {
         this.updateEntity(client, this::findClient, this::getClientId,
-                "UPDATE " + this.tableName + " SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?;",
+                "UPDATE " + TABLE_NAME + " SET name = ?, email = ?, phone = ?, address = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT);
     }
 
     private void deleteClient(Client client) throws DatabaseException {
         this.deleteEntity(client, this::findClient, this::getClientId,
-                "DELETE FROM " + this.tableName + " WHERE id = ?;",
+                "DELETE FROM " + TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT);
     }
 
@@ -119,7 +119,7 @@ public class DBMSClientDAO extends DBMSGeneralDAO<Client> implements ClientDAO {
 
     @Override
     public List<Client> loadAll() throws DatabaseException {
-        return this.loadAll(this.tableName, this::getClient, EntityException.Entity.CLIENT);
+        return this.loadAll(TABLE_NAME, this::getClient, EntityException.Entity.CLIENT);
     }
 
     @Override

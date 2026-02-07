@@ -23,8 +23,8 @@ import java.util.UUID;
 public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements ClientOrderDAO {
 
     private final Gson gson = new Gson();
-    private final String tableName = "clientOrder";
-    private final String orderState = "orderState";
+    private static final String TABLE_NAME = "clientOrder";
+    private static final String ORDER_STATE = "orderState";
     private final DBMSClientDAO clientDAO;
     private final DBMSProductInStockDAO productInStockDAO;
 
@@ -64,17 +64,17 @@ public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements C
     }
 
     private ClientOrder findByIdFromPersistence(UUID id) throws DatabaseException {
-        return this.findFromPersistence(this.tableName, "id", id,
+        return this.findFromPersistence(TABLE_NAME, "id", id,
                 this::getClientOrder, EntityException.Entity.CLIENT_ORDER);
     }
 
     private List<ClientOrder> findByStateFromPersistence(OrderState state) throws DatabaseException {
-        return this.findMatchesFromPersistence(this.tableName, this.orderState, state,
+        return this.findMatchesFromPersistence(TABLE_NAME, ORDER_STATE, state,
                 this::getClientOrderList, EntityException.Entity.CLIENT_ORDER);
     }
 
     private List<ClientOrder> findByStateAndClientIdFromPersistence(OrderState state, UUID clientId) throws DatabaseException {
-        return this.findMatchesFromPersistence(this.tableName, this.orderState, state.toString(),
+        return this.findMatchesFromPersistence(TABLE_NAME, ORDER_STATE, state.toString(),
                 "clientId", clientId, this::getClientOrderList, EntityException.Entity.CLIENT_ORDER);
     }
 
@@ -83,7 +83,7 @@ public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements C
             byte[] bytesId = rs.getBytes("id");
             LocalDateTime registrationDate = rs.getObject("registrationDate", LocalDateTime.class);
             String productsOrderedDBFormatJson = rs.getString("productsOrdered");
-            String orderStateString = rs.getString(this.orderState);
+            String orderStateString = rs.getString(ORDER_STATE);
             byte[] bytesRepresentativeId = rs.getBytes("representativeId");
             byte[] bytesClientId = rs.getBytes("clientId");
             byte[] bytesWarehouseWorkerId = rs.getBytes("warehouseWorkerId");
@@ -155,21 +155,21 @@ public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements C
 
     private void saveNewClientOrder(ClientOrder clientOrder) throws DatabaseException {
         this.saveNewEntity(clientOrder, this::loadClientOrder, this::getClientOrderId, this::copy,
-                "INSERT INTO " + this.tableName + " (id, registrationDate, productsOrdered, orderState, representativeId, " +
+                "INSERT INTO " + TABLE_NAME + " (id, registrationDate, productsOrdered, orderState, representativeId, " +
                         "clientId) VALUES (?,?,?,?,?,?);",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ORDER);
     }
 
     private void updateClientOrder(ClientOrder clientOrder) throws DatabaseException {
         this.updateEntity(clientOrder, this::loadClientOrder, this::getClientOrderId,
-                "UPDATE " + this.tableName + " SET registrationDate = ?, productsOrdered = ?, orderState = ?, " +
+                "UPDATE " + TABLE_NAME + " SET registrationDate = ?, productsOrdered = ?, orderState = ?, " +
                         "representativeId = ?, clientId = ?, warehouseWorkerId = ?, deliveryDate = ?, deliveryWorkerId = ? WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ORDER);
     }
 
     private void deleteClientOrder(ClientOrder clientOrder) throws DatabaseException {
         this.deleteEntity(clientOrder, this::loadClientOrder, this::getClientOrderId,
-                "DELETE FROM " + this.tableName + " WHERE id = ?;",
+                "DELETE FROM " + TABLE_NAME + " WHERE id = ?;",
                 this::loadPreparedStatement, EntityException.Entity.CLIENT_ORDER);
     }
 
@@ -191,7 +191,7 @@ public class DBMSClientOrderDAO extends DBMSGeneralDAO<ClientOrder> implements C
 
     @Override
     public List<ClientOrder> loadAll() throws DatabaseException {
-        return this.loadAll(this.tableName, this::getClientOrder, EntityException.Entity.CLIENT_ORDER);
+        return this.loadAll(TABLE_NAME, this::getClientOrder, EntityException.Entity.CLIENT_ORDER);
     }
 
     @Override
